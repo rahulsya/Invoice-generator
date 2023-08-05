@@ -135,7 +135,9 @@ function Form({
                 styles="text-sm text-end"
               />
             </div>
-            <div className="pt-3 text-lg text-blue-600">{formatFinalTotal}</div>
+            <div className="pt-3 text-lg text-blue-600">
+              {formatFinalTotal ? formatFinalTotal : 0}
+            </div>
           </div>
         </div>
       </div>

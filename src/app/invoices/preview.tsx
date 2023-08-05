@@ -37,13 +37,21 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="mt-12 flex flex-row">
         <div className="mr-12 text-sm">
           <div>From : </div>
-          <div className="font-semibold">{bill_from.split(",")[0]}</div>
-          <div className="w-[250px] ">{bill_from}</div>
+          {bill_from && (
+            <>
+              <div className="font-semibold">{bill_from.split(",")[0]}</div>
+              <div className="w-[250px] ">{bill_from}</div>
+            </>
+          )}
         </div>
         <div className="text-sm">
           <div>To : </div>
-          <div className="font-semibold">{bill_to.split(",")[0]}</div>
-          <div className="w-[250px] text-sm">{bill_to}</div>
+          {bill_to && (
+            <>
+              <div className="font-semibold">{bill_to.split(",")[0]}</div>
+              <div className="w-[250px] text-sm">{bill_to}</div>
+            </>
+          )}
         </div>
       </div>
       {/* end address */}

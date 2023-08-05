@@ -21,7 +21,15 @@ function Invoices() {
     setDetails(
       localStorage.getItem("detail")
         ? JSON.parse(localStorage.getItem("detail") || "")
-        : []
+        : {
+            invoice_number: "",
+            bill_from: "",
+            bill_to: "",
+            date: "",
+            due_date: "",
+            notes: "",
+            discount: 0,
+          }
     );
   }, []);
 
