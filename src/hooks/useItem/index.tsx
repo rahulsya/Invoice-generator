@@ -2,8 +2,8 @@
 import { Item } from "@/@types/types";
 import { useState } from "react";
 
-function useItem(data: Item[]) {
-  const [Items, setItems] = useState<Item[]>(data);
+function useItem() {
+  const [Items, setItems] = useState<Item[]>([]);
 
   const addNewItem = () => {
     setItems((state) => [

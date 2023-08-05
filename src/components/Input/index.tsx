@@ -29,6 +29,7 @@ export default function Input({
         <div className="text-gray-500 pb-1">{title}</div>
         <textarea
           name={name}
+          value={value}
           placeholder={placeholder}
           className="border rounded-md border-gray-400 w-full p-2"
           onChange={onChange}

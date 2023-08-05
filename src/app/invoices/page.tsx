@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "./form";
 import Preview from "./preview";
 import useItem from "@/hooks/useItem";
@@ -7,26 +7,23 @@ import useDetail from "@/hooks/useDetail";
 
 function Invoices() {
   const { Items, setItems, addNewItem, removeItem, totalPrice, saveItems } =
-    useItem(
+    useItem();
+  const { Details, setDetails, saveDetails } = useDetail();
+
+  const [toggleForm, setToggleForm] = useState(false);
+
+  useEffect(() => {
+    setItems(
       localStorage.getItem("items")
         ? JSON.parse(localStorage.getItem("items") || "")
         : []
     );
-  const { Details, setDetails, saveDetails } = useDetail(
-    localStorage.getItem("detail")
-      ? JSON.parse(localStorage.getItem("detail") || "")
-      : {
-          invoice_number: "",
-          bill_from: "",
-          bill_to: "",
-          date: "",
-          due_date: "",
-          notes: "",
-          discount: 0,
-        }
-  );
-
-  const [toggleForm, setToggleForm] = useState(false);
+    setDetails(
+      localStorage.getItem("detail")
+        ? JSON.parse(localStorage.getItem("detail") || "")
+        : []
+    );
+  }, []);
 
   return (
     <div>
