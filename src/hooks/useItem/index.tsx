@@ -2,8 +2,8 @@
 import { Item } from "@/@types/types";
 import { useState } from "react";
 
-function useItem() {
-  const [Items, setItems] = useState<Item[]>([]);
+function useItem(data: Item[]) {
+  const [Items, setItems] = useState<Item[]>(data);
 
   const addNewItem = () => {
     setItems((state) => [
@@ -13,7 +13,6 @@ function useItem() {
         name: "",
         price: 0,
         qty: 0,
-        total: 0,
       },
     ]);
   };
@@ -27,12 +26,17 @@ function useItem() {
     return Items.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
   };
 
+  const saveItems = () => {
+    localStorage.setItem("items", JSON.stringify(Items));
+  };
+
   return {
     Items,
     setItems,
     addNewItem,
     removeItem,
     totalPrice,
+    saveItems,
   };
 }
 

@@ -4,31 +4,31 @@ import React, { useState } from "react";
 import InvoiceItem from "./invoice-items";
 import useItem from "@/hooks/useItem";
 import { formatNumber } from "@/utils";
+import { Details, Item } from "@/@types/types";
+import useDetail from "@/hooks/useDetail";
 
-type Details = {
-  invoice_number: string;
-  bill_from: string;
-  bill_to: string;
-  date: string;
-  due_date: string;
-  notes: string;
-  discount: number;
+type IProps = {
+  Items: Item[];
+  totalPrice: () => number;
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
+  removeItem: (id: number) => void;
+  addNewItem: () => void;
+  // details
+  Details: Details;
+  setDetails: React.Dispatch<React.SetStateAction<Details>>;
 };
 
-function Form() {
-  const { Items, setItems, addNewItem, removeItem, totalPrice } = useItem();
-  const [Details, setDetails] = useState<Details>({
-    invoice_number: "",
-    bill_from: "",
-    bill_to: "",
-    date: "",
-    due_date: "",
-    notes: "",
-    discount: 0,
-  });
-  console.log(Details);
-
+function Form({
+  Items,
+  totalPrice,
+  setItems,
+  removeItem,
+  addNewItem,
+  Details,
+  setDetails,
+}: IProps) {
   const formatTotal = formatNumber(totalPrice());
+  const formatFinalTotal = formatNumber(totalPrice() - Details.discount);
 
   const onChangeDetails = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,7 +52,7 @@ function Form() {
         <Input
           onChange={(e) => onChangeDetails(e)}
           value={Details?.bill_from}
-          placeholder="Company, depok street no 77."
+          placeholder="Company Name, depok street no 77."
           title="Your company details"
           name="bill_from"
           type="text-area"
@@ -61,7 +61,7 @@ function Form() {
         <Input
           onChange={(e) => onChangeDetails(e)}
           value={Details?.bill_to}
-          placeholder="Company, ciracas street no 145."
+          placeholder="Company Name, ciracas street no 145."
           title="Bill to"
           name="bill_to"
           type="text-area"
@@ -83,7 +83,7 @@ function Form() {
         />
       </div>
       {/* items */}
-      <div className="bg-gray-200 mt-8 rounded p-4">
+      <div className="bg-gray-100 mt-8 rounded p-4">
         {/* form grup */}
         {Items.map((item, index) => {
           return (
@@ -99,14 +99,14 @@ function Form() {
         <div className="w-full flex justify-center my-4">
           <button
             onClick={() => addNewItem()}
-            className="font-semibold text-white bg-blue-600 rounded px-4 py-2"
+            className="font-semibold text-sm text-white bg-blue-600 rounded px-4 py-2"
           >
             Add Item
           </button>
         </div>
       </div>
       {/* end items */}
-      <div className="flex flex-row items-start mt-4">
+      <div className="flex flex-row items-start mt-12">
         <div className="w-1/2">
           <Input
             onChange={(e) => onChangeDetails(e)}
@@ -117,24 +117,25 @@ function Form() {
             name="notes"
           />
         </div>
-        <div className="w-1/2 flex flex-col justify-end items-end">
-          <div className="flex flex-row items-center">
-            <div className="font-semibold mr-6">Subtotal</div>
-            <div className="font-bold text-2xl">{formatTotal}</div>
+        <div className="w-1/2 flex flex-row justify-end items-center text-sm">
+          <div className="pr-4 text-gray-500 font-semibold">
+            <div className="pb-2">Sub Total</div>
+            <div className="pb-2">Discount</div>
+            <div className="pt-4 text-blue-600">Total</div>
           </div>
-          <div className="flex flex-row items-center py-3">
-            <div className="font-semibold px-5">Discount</div>
-            <Input
-              onChange={(e) => onChangeDetails(e)}
-              value={Details?.discount.toString()}
-              placeholder="Discount"
-              type="number"
-              name="discount"
-              styles="w-[120px]"
-            />
-          </div>
-          <div className="flex flex-row items-center py-3">
-            <div className="font-semibold text-blue-600">Total</div>
+          <div className="text-end items-end">
+            <div className="font-bold text-lg pb-2">{formatTotal}</div>
+            <div>
+              <Input
+                onChange={(e) => onChangeDetails(e)}
+                value={Details?.discount.toString()}
+                placeholder="Discount"
+                type="number"
+                name="discount"
+                styles="text-sm text-end"
+              />
+            </div>
+            <div className="pt-3 text-lg text-blue-600">{formatFinalTotal}</div>
           </div>
         </div>
       </div>

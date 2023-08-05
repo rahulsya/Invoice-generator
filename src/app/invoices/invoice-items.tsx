@@ -33,50 +33,50 @@ function InvoiceItem({
 
   return (
     <div>
-      {showHeader && (
-        <div className="flex flex-row text-gray-500 mb-1">
-          <div className="w-[400px] mr-3">Item</div>
-          <div className="w-[200px] mr-3">Price</div>
-          <div className="w-[100px] mr-3">Qty</div>
-          <div className="w-[200px]">Total</div>
+      <div className="flex flex-row items-center mb-4 text-sm">
+        <div className="w-[400px] mr-3">
+          <Input
+            name="name"
+            placeholder="Product name"
+            onChange={(e) => {
+              setItem(e);
+            }}
+            title={showHeader ? "Item" : ""}
+            type="text"
+            value={item?.name}
+          />
         </div>
-      )}
-      <div className="flex flex-row items-center mb-4">
-        <Input
-          name="name"
-          placeholder="Product name"
-          onChange={(e) => {
-            setItem(e);
-          }}
-          type="text"
-          value={item?.name}
-          styles="w-[400px] mr-3"
-        />
-        <Input
-          name="price"
-          placeholder="Price"
-          onChange={(e) => setItem(e)}
-          type="number"
-          value={item?.price.toString()}
-          styles="w-[200px] mr-3"
-        />
-        <Input
-          name="qty"
-          placeholder="Qty"
-          onChange={(e) => setItem(e)}
-          type="number"
-          value={item?.qty.toString()}
-          styles="w-[100px] mr-3"
-        />
-        <Input
-          name="qty"
-          placeholder="Qty"
-          onChange={(e) => setItem(e)}
-          type="number"
-          value={totalPrice.toString()}
-          styles="w-[200px] mr-3"
-          disable={true}
-        />
+        <div className="w-[200px] mr-3">
+          <Input
+            name="price"
+            placeholder="Price"
+            onChange={(e) => setItem(e)}
+            title={showHeader ? "Price" : ""}
+            type="number"
+            value={item?.price.toString()}
+          />
+        </div>
+        <div className="w-[100px] mr-3">
+          <Input
+            name="qty"
+            placeholder="Qty"
+            onChange={(e) => setItem(e)}
+            title={showHeader ? "Qty" : ""}
+            type="number"
+            value={item?.qty.toString()}
+          />
+        </div>
+        <div className="w-[200px] mr-3">
+          <Input
+            name="qty"
+            placeholder="Qty"
+            onChange={(e) => setItem(e)}
+            title={showHeader ? "Total" : ""}
+            type="number"
+            value={totalPrice.toString()}
+            disable={true}
+          />
+        </div>
         <button onClick={() => onRemoveItem()} className="pl-2">
           ✖
         </button>
