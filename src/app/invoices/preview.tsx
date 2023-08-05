@@ -60,7 +60,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
         </thead>
         <tbody>
           {Items.map((item) => (
-            <tr className="border">
+            <tr key={item.id} className="border">
               <td className="px-4 py-3">{item.name}</td>
               <td className="px-4 py-3">{formatNumber(item.price)}</td>
               <td className="px-4 py-3">{item.qty}</td>
