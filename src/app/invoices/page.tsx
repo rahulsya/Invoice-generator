@@ -40,7 +40,7 @@ function Invoices() {
           saveItems();
           saveDetails();
         }}
-        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4"
+        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mr-4"
       >
         Save
       </button>
@@ -50,6 +50,18 @@ function Invoices() {
       >
         Toggle Form
       </button>
+      <a
+        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mx-4"
+        download
+        href={`/api/pages.pdf?data=${JSON.stringify(
+          Items
+        )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify({
+          total: totalPrice(),
+          finalTotal: totalPrice() - Details.discount,
+        })}&inv_number=${Details.invoice_number}`}
+      >
+        Download PDF
+      </a>
       <div className="flex flex-col lg:flex-row min-h-screen">
         {!toggleForm && (
           <div className="w-full min-h-screen lg:w-1/2 bg-white rounded-xl px-12 pt-6">
