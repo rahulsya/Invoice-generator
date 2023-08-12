@@ -180,7 +180,7 @@ function PdfDocument({
             )}
           </View>
         </View>
-        0
+
         <View style={styles.tableHeader}>
           <Text style={styles.description}>Item Name</Text>
           <Text style={styles.qty}>Price</Text>

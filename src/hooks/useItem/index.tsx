@@ -13,6 +13,7 @@ function useItem() {
         name: "",
         price: 0,
         qty: 0,
+        qtyRoll: 0,
       },
     ]);
   };
