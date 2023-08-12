@@ -13,6 +13,7 @@ import useItem from "@/hooks/useItem";
 import useDetail from "@/hooks/useDetail";
 import { formatNumber } from "@/utils";
 import { Details, Item } from "@/@types/types";
+import { invDetail } from "@/utils/detailInvoice";
 
 Font.register({
   family: "Oswald",
@@ -21,17 +22,18 @@ Font.register({
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 35,
+    // paddingTop: 35,
     paddingBottom: 65,
     paddingHorizontal: 35,
   },
   invHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   invLogo: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
   },
   textInv: {
     fontSize: 14,
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     top: 4,
   },
   addressTo: {
-    left: 10,
+    left: 15,
     maxWidth: 240,
   },
   addressFrom: {
@@ -77,16 +79,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   description: {
-    width: "40%",
+    width: "20%",
   },
   qty: {
-    width: "10%",
+    width: "30%",
   },
   rate: {
-    width: "15%",
+    width: "20%",
   },
+  // meter: {
+  //   width: "15%",
+  // },
   amount: {
-    maxWidth: "100%",
+    textAlign: "left",
+    width: "30%",
   },
   tableRow: {
     top: 45,
@@ -98,23 +104,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   rowDescription: {
-    width: "40%",
+    width: "20%",
     paddingRight: 10,
     lineHeight: 2,
   },
   rowQty: {
-    width: "10%",
-  },
-  rowRate: {
-    width: "15%",
+    width: "30%",
     textAlign: "center",
   },
+  rowRate: {
+    width: "20%",
+    textAlign: "center",
+  },
+  // rowMeter: {
+  //   width: "15%",
+  //   textAlign: "center",
+  // },
   rowAmount: {
-    maxWidth: "100%",
+    width: "30%",
+    textAlign: "left",
   },
   summaryPrice: {
     flexDirection: "row",
-    top: 55,
+    top: 65,
     justifyContent: "flex-end",
   },
   summaryTitle: {
@@ -127,7 +139,7 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   invoiceDetails: {
-    top: 75,
+    top: 100,
     fontSize: 12,
     padding: 20,
     backgroundColor: "#3b82f6",
@@ -151,10 +163,12 @@ function PdfDocument({
   data,
   detail,
   summaryTotal,
+  logoUrl,
 }: {
   data: string;
   detail: string;
   summaryTotal: string;
+  logoUrl: string;
 }) {
   const Items: Item[] = JSON.parse(data);
   const Detail: Details = JSON.parse(detail);
@@ -165,42 +179,30 @@ function PdfDocument({
       <Page style={styles.body}>
         <View style={styles.invHeader}>
           <View>
-            <Text style={styles.textInvNo}>#{Detail?.invoice_number}</Text>
             <Text style={styles.textInv}>INVOICE</Text>
+            <Text style={styles.textInvNo}>#{Detail?.invoice_number}</Text>
           </View>
           <View>
-            <Text>logo here</Text>
-            <Image style={styles.invLogo} src={"/logoFlyover.png"} />
+            <Image style={styles.invLogo} src={logoUrl} />
           </View>
         </View>
         <View style={styles.addressWrapper}>
           <View style={styles.addressFrom}>
-            <Text>From : </Text>
-            {Detail.bill_from && (
-              <>
-                <Text style={styles.titleAddress}>
-                  {Detail?.bill_from.split(",")[0]}
-                </Text>
-                <Text style={styles.addressDesc}>{Detail?.bill_from}</Text>
-              </>
-            )}
+            <Text style={styles.titleAddress}>{invDetail.storeName}</Text>
+            <Text style={styles.addressDesc}>{invDetail.storeAddress}</Text>
+            <Text style={styles.addressDesc}>
+              {invDetail.phoneNumber} - {invDetail.phoneNumber2}
+            </Text>
           </View>
           <View style={styles.addressTo}>
-            <Text>To : </Text>
-            {Detail.bill_to && (
-              <>
-                <Text style={styles.titleAddress}>
-                  {Detail?.bill_to.split(",")[0]}
-                </Text>
-                <Text style={styles.addressDesc}>{Detail?.bill_to}</Text>
-              </>
-            )}
+            <Text>Pelanggan : </Text>
+            <Text style={styles.titleAddress}>{Detail?.bill_to}</Text>
           </View>
         </View>
 
         <View style={styles.tableHeader}>
-          <Text style={styles.description}>Item Name</Text>
-          <Text style={styles.qty}>Price</Text>
+          <Text style={styles.description}>Nama Produk</Text>
+          <Text style={styles.qty}>Harga</Text>
           <Text style={styles.rate}>Qty</Text>
           <Text style={styles.amount}>Total</Text>
         </View>
@@ -208,39 +210,42 @@ function PdfDocument({
           <View key={item.id} style={styles.tableRow}>
             <Text style={styles.rowDescription}>{item.name}</Text>
             <Text style={styles.rowQty}>{formatNumber(item.price)}</Text>
-            <Text style={styles.rowRate}>{item.qty}</Text>
+            <Text style={styles.rowRate}>
+              {item.qty != 0 && `${item.qty} Meter`}
+              {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
+            </Text>
             <Text style={styles.rowAmount}>
-              {formatNumber(item.price * item.qty)}
+              {formatNumber(
+                item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
+              )}
             </Text>
           </View>
         ))}
         <View style={styles.summaryPrice}>
           <View style={styles.summaryTitle}>
             <Text>Sub total</Text>
-            <Text>Discount</Text>
             <Text>Total</Text>
           </View>
           <View style={styles.summaryValue}>
             <Text>{formatNumber(Total.total)}</Text>
-            <Text>
-              {Detail?.discount ? `- ${formatNumber(Detail?.discount)}` : "-"}
-            </Text>
-            <Text>{formatNumber(Total.finalTotal)}</Text>
+            <Text>{formatNumber(Total.total)}</Text>
           </View>
         </View>
-        <Text style={{ fontSize: 10, top: 55 }}>Notes </Text>
-        <Text style={{ fontSize: 10, maxWidth: 250, top: 60 }}>
-          {Detail.notes}
+        <Text style={{ fontSize: 10, top: 70 }}>*Infromasi Pembayaran </Text>
+        <Text style={{ fontSize: 10, maxWidth: 250, top: 75 }}>
+          Bank : {invDetail.bankAccountName}
+        </Text>
+        <Text style={{ fontSize: 10, maxWidth: 250, top: 75 }}>
+          Nomor rekening : {invDetail.bankAccountNumber}
         </Text>
         <View style={styles.invoiceDetails}>
           <View style={styles.invoiceDetailsDate}>
-            <Text>Invoice Date</Text>
-            <Text>Date issued : {Detail.date}</Text>
-            <Text>Due Date : {Detail.due_date}</Text>
+            <Text>Tanggal Invoice</Text>
+            <Text>{Detail.date}</Text>
           </View>
           <View style={styles.invoiceDetailsTotal}>
             <Text>Total</Text>
-            <Text>{formatNumber(Total.finalTotal)}</Text>
+            <Text>{formatNumber(Total.total)}</Text>
           </View>
         </View>
       </Page>

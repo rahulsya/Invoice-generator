@@ -29,11 +29,14 @@ function InvoiceItem({
     });
   };
 
-  const totalPrice = item?.price && item?.qty ? item.price * item.qty : 0;
+  const totalPrice =
+    item?.price && (item?.qty || item.qtyRoll)
+      ? item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
+      : 0;
 
   return (
     <div>
-      <div className="flex flex-row items-center mb-4 text-sm">
+      <div className="flex w-full flex-col lg:flex-row items-center mb-4 text-sm">
         <div className="w-[400px] mr-3">
           <Input
             name="name"

@@ -46,7 +46,6 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* addres */}
       <div className="mt-10 flex flex-row">
         <div className="mr-12 text-sm">
-          <div>From : </div>
           <div className="text-sm font-semibold">{invDetail.storeName}</div>
           <div>{invDetail.storeAddress}</div>
           <div>
@@ -65,11 +64,11 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* items */}
       <table className="table-fixed w-full mt-12 text-sm">
         <thead className="py-12 bg-gray-200 rounded">
-          <tr className="text-gray-600 ">
-            <th className="text-start px-4 py-4">Product Name</th>
+          <tr className="text-gray-600">
+            <th className="text-start px-4 py-4">Nama Produk</th>
             <th className="text-start px-4 py-4">Harga</th>
-            <th className="text-start px-4 py-4">Qty Roll</th>
-            <th className="text-start px-4 py-4">Qty Meter</th>
+            {/* <th className="text-start px-4 py-4">Qty Roll</th> */}
+            <th className="text-start px-4 py-4">Qty</th>
             <th className="text-start px-4 py-4">Total</th>
           </tr>
         </thead>
@@ -78,10 +77,15 @@ function Preview({ Items, Details, totalPrice }: IProps) {
             <tr key={item.id} className="border">
               <td className="px-4 py-3">{item.name}</td>
               <td className="px-4 py-3">{formatNumber(item.price)}</td>
-              <td className="px-4 py-3">{item.qtyRoll}</td>
-              <td className="px-4 py-3">{item.qty}</td>
+              {/* <td className="px-4 py-3">{item.qtyRoll} / ROll </td> */}
               <td className="px-4 py-3">
-                {formatNumber(item.price * item.qty)}
+                {item.qty != 0 && `${item.qty} Meter`}
+                {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
+              </td>
+              <td className="px-4 py-3">
+                {formatNumber(
+                  item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
+                )}
               </td>
             </tr>
           ))}
@@ -99,7 +103,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
         <div className="text-end font-bold space-y-2">
           <div>{formatTotal}</div>
           {/* <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div> */}
-          <div>{formatFinalTotal}</div>
+          <div>{formatTotal}</div>
         </div>
       </div>
       {/* end Total */}
@@ -123,9 +127,8 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="bg-blue-500 p-12 text-white text-sm rounded mt-12 w-full">
         <div className="flex flex-row justify-between">
           <div>
-            <div className="font-bold py-2">Invoice Details</div>
-            <div>Date issued : {date}</div>
-            <div>Due Date : {due_date}</div>
+            <div className="font-bold py-2">Tanggal Invoice</div>
+            <div>{date}</div>
           </div>
           <div>
             <div className="font-bold py-2 text-end">Total Amount</div>
