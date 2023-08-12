@@ -13,6 +13,7 @@ function useItem() {
         name: "",
         price: 0,
         qty: 0,
+        qtyRoll: 0,
       },
     ]);
   };
@@ -23,7 +24,11 @@ function useItem() {
   };
 
   const totalPrice = () => {
-    return Items.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
+    return Items.reduce(
+      (acc, curr) =>
+        acc + curr.price * (curr.qty != 0 ? curr.qty : curr.qtyRoll),
+      0
+    );
   };
 
   const saveItems = () => {

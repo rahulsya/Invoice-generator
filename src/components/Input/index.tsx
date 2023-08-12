@@ -40,7 +40,7 @@ export default function Input({
 
   return (
     <div className={`w-full ${styles}`}>
-      {title && <div className="text-gray-500 pb-1">{title}</div>}
+      {title && <div className="text-gray-500 pb-1 text-xs">{title}</div>}
       <input
         type={type}
         name={name}
