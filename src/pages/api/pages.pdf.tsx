@@ -1,4 +1,4 @@
-import PdfDocument from "@/app/pdf-preview/document";
+import PdfDocument from "@/app/flyover/pdf/document";
 import {
   renderToBuffer,
   renderToStream,

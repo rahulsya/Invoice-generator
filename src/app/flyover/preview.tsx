@@ -2,6 +2,8 @@
 import React from "react";
 import { Details, Item } from "@/@types/types";
 import { formatNumber } from "@/utils";
+import Image from "next/image";
+import { invDetail } from "@/utils/detailInvoice";
 
 type IProps = {
   Items: Item[];
@@ -25,24 +27,31 @@ function Preview({ Items, Details, totalPrice }: IProps) {
   return (
     <div>
       {/* title header */}
-      <div>
-        <div className="text-xl font-bold">INVOICE</div>
-        <div className="text-lg font-semibold text-blue-600 uppercase">
-          # {invoice_number}
+      <div className="flex flex-row justify-between items-center">
+        <div>
+          <div className="text-xl font-bold">INVOICE</div>
+          <div className="text-lg font-semibold text-blue-600 uppercase">
+            # {invoice_number}
+          </div>
         </div>
+        <Image
+          alt="Flyover logo"
+          width={150}
+          height={150}
+          src={"/logoFlyover.png"}
+        />
       </div>
       {/* end title header */}
 
       {/* addres */}
-      <div className="mt-12 flex flex-row">
+      <div className="mt-10 flex flex-row">
         <div className="mr-12 text-sm">
           <div>From : </div>
-          {bill_from && (
-            <>
-              <div className="font-semibold">{bill_from.split(",")[0]}</div>
-              <div className="w-[250px] ">{bill_from}</div>
-            </>
-          )}
+          <div className="text-sm font-semibold">{invDetail.storeName}</div>
+          <div>{invDetail.storeAddress}</div>
+          <div>
+            {invDetail.phoneNumber} - {invDetail.phoneNumber2}
+          </div>
         </div>
         <div className="text-sm">
           <div>Pelanggan : </div>
@@ -84,20 +93,31 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="flex flex-row justify-end mt-4 items-center text-sm">
         <div className="text-gray-500 mr-12 font-semibold space-y-2">
           <div>Sub Total</div>
-          <div>Discount</div>
+          {/* <div>Discount</div> */}
           <div>Total</div>
         </div>
         <div className="text-end font-bold space-y-2">
           <div>{formatTotal}</div>
-          <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div>
+          {/* <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div> */}
           <div>{formatFinalTotal}</div>
         </div>
       </div>
       {/* end Total */}
 
       {/* notes */}
-      <div className="text-gray-500 text-sm font-bold">Notes</div>
-      <div className="text-sm py-2">{notes}</div>
+      <div className="text-gray-500 text-sm font-bold">
+        *Informasi Pembayaran
+      </div>
+      <div className="text-sm py-2 font-semibold">
+        <div>
+          <span className="font-normal">Bank : </span>
+          {invDetail.bankAccountName}
+        </div>
+        <div>
+          <span className="font-normal">Nomor rekening : </span>
+          {invDetail.bankAccountNumber}
+        </div>
+      </div>
       {/* end notes */}
 
       <div className="bg-blue-500 p-12 text-white text-sm rounded mt-12 w-full">
