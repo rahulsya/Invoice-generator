@@ -35,6 +35,11 @@ function useItem() {
     localStorage.setItem("items", JSON.stringify(Items));
   };
 
+  const resetItems=()=>{
+    setItems([])
+    localStorage.setItem("items", JSON.stringify([]));
+  }
+
   return {
     Items,
     setItems,
@@ -42,6 +47,7 @@ function useItem() {
     removeItem,
     totalPrice,
     saveItems,
+    resetItems
   };
 }
 

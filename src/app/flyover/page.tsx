@@ -6,9 +6,16 @@ import useItem from "@/hooks/useItem";
 import useDetail from "@/hooks/useDetail";
 
 function FlyoverInvoice() {
-  const { Items, setItems, addNewItem, removeItem, totalPrice, saveItems } =
-    useItem();
-  const { Details, setDetails, saveDetails } = useDetail();
+  const {
+    Items,
+    setItems,
+    addNewItem,
+    removeItem,
+    totalPrice,
+    saveItems,
+    resetItems,
+  } = useItem();
+  const { Details, setDetails, saveDetails, resetDetails } = useDetail();
 
   const [toggleForm, setToggleForm] = useState(false);
 
@@ -33,35 +40,49 @@ function FlyoverInvoice() {
     );
   }, []);
 
+  const resetForm = () => {
+    resetItems();
+    resetDetails();
+  };
+
   return (
     <div>
-      <button
-        onClick={() => {
-          saveItems();
-          saveDetails();
-        }}
-        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mr-4"
-      >
-        Save
-      </button>
-      <button
-        onClick={() => setToggleForm((state) => !state)}
-        className="py-2 px-6 rounded-lg bg-white text-blue-800 mb-4"
-      >
-        Toggle Form
-      </button>
-      <a
-        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mx-4"
-        download
-        href={`/api/pages.pdf?data=${JSON.stringify(
-          Items
-        )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify({
-          total: totalPrice(),
-          finalTotal: totalPrice() - Details.discount,
-        })}&inv_number=${Details.invoice_number}`}
-      >
-        Download PDF
-      </a>
+      <div className="flex flex-row flex-wrap">
+        <button
+          onClick={() => {
+            saveItems();
+            saveDetails();
+            alert("Data berhasil di simpan");
+          }}
+          className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mr-4"
+        >
+          Save
+        </button>
+        <button
+          onClick={() => setToggleForm((state) => !state)}
+          className="py-2 px-6 rounded-lg bg-white text-blue-800 mb-4"
+        >
+          Preview Invoice
+        </button>
+        <button
+          onClick={() => resetForm()}
+          className="py-2 px-6 rounded-lg bg-yellow-200 text-yellow-800 mb-4 ml-4"
+        >
+          Reset Data
+        </button>
+        <a
+          className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mx-4"
+          download
+          href={`/api/pages.pdf?data=${JSON.stringify(
+            Items
+          )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify({
+            total: totalPrice(),
+            finalTotal: totalPrice() - Details.discount,
+          })}&inv_number=${Details.invoice_number}`}
+        >
+          Download PDF
+        </a>
+      </div>
       <div className="flex flex-col lg:flex-row min-h-screen">
         {!toggleForm && (
           <div className="w-full min-h-screen lg:w-1/2 bg-white rounded-xl px-12 pt-6">

@@ -17,9 +17,34 @@ export default function useDetail() {
     localStorage.setItem("detail", JSON.stringify(Details));
   };
 
+  const resetDetails = () => {
+    setDetails({
+      invoice_number: "",
+      bill_from: "",
+      bill_to: "",
+      date: "",
+      due_date: "",
+      notes: "",
+      discount: 0,
+    });
+    localStorage.setItem(
+      "detail",
+      JSON.stringify({
+        invoice_number: "",
+        bill_from: "",
+        bill_to: "",
+        date: "",
+        due_date: "",
+        notes: "",
+        discount: 0,
+      })
+    );
+  };
+
   return {
     Details,
     setDetails,
     saveDetails,
+    resetDetails,
   };
 }
