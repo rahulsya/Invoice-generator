@@ -3,7 +3,7 @@ import React from "react";
 type IProps = {
   name?: string;
   title?: string;
-  type: "text" | "number" | "date" | "text-area";
+  type: "text" | "number" | "date" | "text-area" | "email" | "password";
   styles?: string;
   placeholder?: string;
   onChange: (
