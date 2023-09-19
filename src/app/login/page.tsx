@@ -1,9 +1,11 @@
 "use client";
-import Input from "@/components/Input";
-import { useAuthContext } from "@/firebase/AuthContext";
-import { signIn } from "@/firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { signIn } from "@/firebase/auth";
+import { useAuthContext } from "@/firebase/AuthContext";
+
+import Input from "@/components/Input";
 
 function Login() {
   const [Form, setForm] = useState({
