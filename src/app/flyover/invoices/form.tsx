@@ -5,6 +5,7 @@ import InvoiceItem from "./invoice-items";
 import { formatNumber, generateInvoice } from "@/utils";
 import { Details, Item } from "@/@types/types";
 import { invDetail } from "@/utils/detailInvoice";
+import useDimensions from "@/hooks/useDimension";
 
 type IProps = {
   Items: Item[];
@@ -26,6 +27,7 @@ function Form({
   Details,
   setDetails,
 }: IProps) {
+  const { height, width } = useDimensions();
   const formatTotal = formatNumber(totalPrice());
 
   const onChangeDetails = (
@@ -60,19 +62,11 @@ function Form({
       </div>
       <button
         onClick={() => onRegenerateNumber()}
-        className="mt-2 py-2 px-2 bg-blue-500 text-white text-xs rounded"
+        className="mt-2 rounded bg-blue-500 px-2 py-2 text-xs text-white"
       >
         GenerateNumber
       </button>
-      <div className="flex flex-row mt-4 items-start">
-        {/* <Input
-          onChange={(e) => onChangeDetails(e)}
-          value={Details?.bill_from}
-          placeholder="Company Name, depok street no 77."
-          title="Your company details"
-          name="bill_from"
-          type="text-area"
-        /> */}
+      <div className="mt-4 flex flex-row items-start">
         <div className="w-1/2">
           <div className="text-sm font-semibold">{invDetail.storeName}</div>
           <div>{invDetail.storeAddress}</div>
@@ -93,7 +87,7 @@ function Form({
           />
         </div>
       </div>
-      <div className="flex flex-row mt-4 w-1/4">
+      <div className="mt-4 flex w-1/4 flex-row">
         <Input
           onChange={(e) => onChangeDetails(e)}
           title="Tanggal"
@@ -109,30 +103,33 @@ function Form({
         /> */}
       </div>
       {/* items */}
-      <div className="bg-gray-100 mt-8 rounded p-4">
+      <div className="mt-8 rounded bg-gray-100 p-4">
         {/* form grup */}
         {Items.map((item, index) => {
+          const currentWidth = width;
+          const showHeader =
+            currentWidth < 1024 ? true : index == 0 ? true : false;
           return (
             <InvoiceItem
               key={item.id}
               item={item}
-              showHeader={index == 0 ? true : false}
+              showHeader={showHeader}
               onChangeItem={setItems}
               onRemoveItem={() => removeItem(item.id)}
             />
           );
         })}
-        <div className="w-full flex justify-center my-4">
+        <div className="my-4 flex w-full justify-center">
           <button
             onClick={() => addNewItem()}
-            className="font-semibold text-sm text-white bg-blue-600 rounded px-4 py-2"
+            className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
           >
             Add Item
           </button>
         </div>
       </div>
       {/* end items */}
-      <div className="flex flex-row items-start mt-12">
+      <div className="mt-12 flex flex-row items-start">
         <div className="w-1/2">
           {/* <Input
             onChange={(e) => onChangeDetails(e)}
@@ -143,14 +140,14 @@ function Form({
             name="notes"
           /> */}
         </div>
-        <div className="w-1/2 flex flex-row justify-end items-center text-sm">
-          <div className="pr-4 text-gray-500 font-semibold">
+        <div className="flex w-1/2 flex-row items-center justify-end text-sm">
+          <div className="pr-4 font-semibold text-gray-500">
             <div className="pb-2">Sub Total</div>
             {/* <div className="pb-2">Discount</div> */}
             <div className="pt-3 text-blue-600">Total</div>
           </div>
-          <div className="text-end items-end">
-            <div className="font-bold text-lg pb-2">{formatTotal}</div>
+          <div className="items-end text-end">
+            <div className="pb-2 text-lg font-bold">{formatTotal}</div>
             <div className="pt-2 text-lg text-blue-600">{formatTotal}</div>
           </div>
         </div>

@@ -11,6 +11,7 @@ type IProps = {
   ) => void;
   value?: string;
   disable?: boolean;
+  styleLabel?: string;
 };
 
 export default function Input({
@@ -22,16 +23,17 @@ export default function Input({
   onChange,
   value,
   disable = false,
+  styleLabel,
 }: IProps) {
   if (type == "text-area") {
     return (
       <div className={`w-full ${styles}`}>
-        <div className="text-gray-500 pb-1">{title}</div>
+        <div className="pb-1 text-gray-500 ">{title}</div>
         <textarea
           name={name}
           value={value}
           placeholder={placeholder}
-          className="border rounded-md border-gray-400 w-full p-2"
+          className="w-full rounded-md border border-gray-400 p-2"
           onChange={onChange}
         ></textarea>
       </div>
@@ -40,12 +42,16 @@ export default function Input({
 
   return (
     <div className={`w-full ${styles}`}>
-      {title && <div className="text-gray-500 pb-1 text-xs">{title}</div>}
+      {title && (
+        <div className={`pb-1 text-xs text-gray-500 ${styleLabel}`}>
+          {title}
+        </div>
+      )}
       <input
         type={type}
         name={name}
         placeholder={placeholder}
-        className="border rounded-md border-gray-400 w-full p-2"
+        className="w-full rounded-md border border-gray-400 p-2"
         onChange={onChange}
         value={value}
         disabled={disable}

@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Form from "./form";
 import Preview from "./preview";
 import useItem from "@/hooks/useItem";
 import useDetail from "@/hooks/useDetail";
+import Button from "@/components/button";
 
 function FlyoverInvoice() {
   const {
@@ -17,7 +18,8 @@ function FlyoverInvoice() {
   } = useItem();
   const { Details, setDetails, saveDetails, resetDetails } = useDetail();
 
-  const [toggleForm, setToggleForm] = useState(false);
+  const [toggleForm, setToggleForm] = useState(true);
+  const [save, SetSave] = useState(false);
 
   useEffect(() => {
     setItems(
@@ -40,6 +42,18 @@ function FlyoverInvoice() {
     );
   }, []);
 
+  useEffect(() => {
+    console.log("caled");
+
+    const { bill_to, date } = Details;
+    const isEmptyField = [bill_to, date].includes("");
+    if (Items.length > 0 && !isEmptyField) {
+      SetSave(true);
+      return;
+    }
+    SetSave(false);
+  }, [Details, Items]);
+
   const resetForm = () => {
     resetItems();
     resetDetails();
@@ -47,31 +61,26 @@ function FlyoverInvoice() {
 
   return (
     <div>
-      <div className="flex flex-row flex-wrap">
-        <button
+      <div className="mb-4 flex flex-row">
+        <Button
+          type={`${save ? "primary" : "disabled"}`}
+          title="Save"
+          className="mr-4"
           onClick={() => {
             saveItems();
             saveDetails();
             alert("Data berhasil di simpan");
           }}
-          className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mr-4"
-        >
-          Save
-        </button>
-        <button
+        />
+        <Button
+          type="secondary"
+          title="Preview Invoice"
+          className="mr-4"
           onClick={() => setToggleForm((state) => !state)}
-          className="py-2 px-6 rounded-lg bg-white text-blue-800 mb-4"
-        >
-          Preview Invoice
-        </button>
-        <button
-          onClick={() => resetForm()}
-          className="py-2 px-6 rounded-lg bg-yellow-200 text-yellow-800 mb-4 ml-4"
-        >
-          Reset Data
-        </button>
+        />
+        <Button type="warning" title="Reset Data" onClick={() => resetForm()} />
         <a
-          className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mx-4"
+          className="mx-4 rounded-lg bg-blue-800 px-6 py-2 text-white"
           download
           href={`/api/pages.pdf?data=${JSON.stringify(
             Items
@@ -83,27 +92,30 @@ function FlyoverInvoice() {
           Download PDF
         </a>
       </div>
-      <div className="flex flex-col lg:flex-row min-h-screen">
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <div
+          className={`min-h-screen w-full rounded-xl bg-white px-12 pt-6 ${
+            toggleForm ? "w-full" : "lg:w-1/2"
+          } `}
+        >
+          <Form
+            addNewItem={addNewItem}
+            removeItem={removeItem}
+            Items={Items}
+            totalPrice={totalPrice}
+            setItems={setItems}
+            setDetails={setDetails}
+            Details={Details}
+          />
+        </div>
         {!toggleForm && (
-          <div className="w-full min-h-screen lg:w-1/2 bg-white rounded-xl px-12 pt-6">
-            <Form
-              addNewItem={addNewItem}
-              removeItem={removeItem}
-              Items={Items}
-              totalPrice={totalPrice}
-              setItems={setItems}
-              setDetails={setDetails}
-              Details={Details}
-            />
+          <div
+            className={`ml-0 mt-4  min-h-screen w-full rounded-xl
+             bg-white p-12 lg:ml-4 lg:mt-0 lg:w-1/2`}
+          >
+            <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
           </div>
         )}
-        <div
-          className={`w-full min-h-screen ${
-            toggleForm ? "w-full" : "lg:w-1/2 ml-0 lg:ml-4"
-          }  mt-4 lg:mt-0 bg-white rounded-xl p-12`}
-        >
-          <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
-        </div>
       </div>
     </div>
   );
