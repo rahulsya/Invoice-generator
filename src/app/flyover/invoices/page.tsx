@@ -43,7 +43,6 @@ function FlyoverInvoice() {
   }, []);
 
   useEffect(() => {
-    console.log("caled");
 
     const { bill_to, date } = Details;
     const isEmptyField = [bill_to, date].includes("");
