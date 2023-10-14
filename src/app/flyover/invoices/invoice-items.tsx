@@ -36,8 +36,8 @@ function InvoiceItem({
 
   return (
     <div>
-      <div className="flex w-full flex-col lg:flex-row items-center mb-4 text-sm">
-        <div className="w-[400px] mr-3">
+      <div className="mb-4 flex w-full flex-col items-center text-sm lg:flex-row">
+        <div className="w-full lg:mr-3 lg:w-[400px]">
           <Input
             name="name"
             placeholder="Product name"
@@ -49,7 +49,7 @@ function InvoiceItem({
             value={item?.name}
           />
         </div>
-        <div className="w-[200px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[200px]">
           <Input
             name="price"
             placeholder="Price"
@@ -59,7 +59,7 @@ function InvoiceItem({
             value={item?.price.toString()}
           />
         </div>
-        <div className="w-[100px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[100px]">
           <Input
             name="qtyRoll"
             placeholder="qtyRoll"
@@ -69,7 +69,7 @@ function InvoiceItem({
             value={item?.qtyRoll.toString()}
           />
         </div>
-        <div className="w-[100px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[100px]">
           <Input
             name="qty"
             placeholder="Qty"
@@ -79,7 +79,7 @@ function InvoiceItem({
             value={item?.qty.toString()}
           />
         </div>
-        <div className="w-[200px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[200px]">
           <Input
             name="qty"
             placeholder="Qty"

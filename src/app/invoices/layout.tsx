@@ -1,10 +1,15 @@
+"use client";
 import Navigation from "@/components/Navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type Iprops = {
   children: React.ReactNode;
 };
 function InvoiceLayout({ children }: Iprops) {
+  const [isLogin, setisLogin] = useState(false);
+
+  useEffect(() => {}, []);
+
   return (
     <div className="w-full bg-gray-400">
       <Navigation />

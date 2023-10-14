@@ -14,6 +14,8 @@ export default function useDetail() {
   });
 
   const saveDetails = () => {
+    console.log('save ',Details);
+    
     localStorage.setItem("detail", JSON.stringify(Details));
   };
 
