@@ -1,8 +1,9 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { dashboardIC, fileIC, settingIC } from "@/assets/icons";
+import { dashboardIC, fileIC, settingIC, menuIC } from "@/assets/icons";
 
 const Menus = [
   {
@@ -33,48 +34,76 @@ const Menus = [
 
 function SideNavigation() {
   const pathname = usePathname();
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const Menu = () => {
+    return (
+      <>
+        {Menus.map((menu, index) => {
+          const active = pathname == menu.link;
+          return (
+            <div
+              key={index}
+              className="mb-2 w-full cursor-pointer px-0 lg:px-8"
+            >
+              <Link href={`${menu.link}`}>
+                <div
+                  className={`flex rounded p-3 text-sm font-semibold ${
+                    active
+                      ? "bg-gray-300 text-gray-900"
+                      : "text-gray-500 hover:bg-gray-200"
+                  }`}
+                >
+                  <Image
+                    className="mr-3"
+                    width={20}
+                    height={20}
+                    src={menu.icon}
+                    alt="icon"
+                  />
+                  <div className="">{menu.title}</div>
+                </div>
+                {/* )} */}
+              </Link>
+            </div>
+          );
+        })}
+      </>
+    );
+  };
 
   return (
-    <div className="bg-white border-r-2 border-gray-300 h-full w-full">
+    <div className="h-full w-full bg-white">
       <div className="flex flex-col">
         {/* Company Logo */}
-        <div className="border-b py-4 px-8 border-gray-300">
-          <div className="text-sm font-bold">Flyover Sticker</div>
-          <div className="text-xs font-semibold text-gray-500">Workspace</div>
+        <div className="flex flex-row justify-between border-b border-gray-300 px-4 py-4 lg:px-8">
+          <div>
+            <div className="text-sm font-bold">Flyover Sticker</div>
+            <div className="text-xs font-semibold text-gray-500">Workspace</div>
+          </div>
+          <button
+            className="block lg:hidden"
+            onClick={() => setIsShowMenu(!isShowMenu)}
+          >
+            <Image
+              className="mr-3"
+              width={20}
+              height={20}
+              src={menuIC}
+              alt="icon"
+            />
+          </button>
         </div>
         {/* end company logo */}
 
         {/* menus */}
-        <div className="mt-4">
-          {Menus.map((menu, index) => {
-            const active = pathname == menu.link;
-            return (
-              <div
-                key={index}
-                className="w-full mb-2 px-0 lg:px-8 cursor-pointer"
-              >
-                <Link href={`${menu.link}`}>
-                  <div
-                    className={`flex text-sm font-semibold p-3 rounded ${
-                      active
-                        ? "text-gray-900 bg-gray-300"
-                        : "text-gray-500 hover:bg-gray-200"
-                    }`}
-                  >
-                    <Image
-                      className="mr-3"
-                      width={20}
-                      height={20}
-                      src={menu.icon}
-                      alt="icon"
-                    />
-                    <div className="">{menu.title}</div>
-                  </div>
-                  {/* )} */}
-                </Link>
-              </div>
-            );
-          })}
+        {isShowMenu && (
+          <div className="absolute mt-[70px] block w-full border-b bg-white shadow lg:hidden">
+            <Menu />
+          </div>
+        )}
+        <div className="mt-2 hidden lg:block">
+          <Menu />
         </div>
         {/* end menus */}
       </div>

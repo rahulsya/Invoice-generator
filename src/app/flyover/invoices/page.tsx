@@ -18,7 +18,7 @@ function FlyoverInvoice() {
   } = useItem();
   const { Details, setDetails, saveDetails, resetDetails } = useDetail();
 
-  const [toggleForm, setToggleForm] = useState(true);
+  const [toggleForm, setToggleForm] = useState(false);
   const [save, SetSave] = useState(false);
 
   useEffect(() => {
@@ -43,9 +43,8 @@ function FlyoverInvoice() {
   }, []);
 
   useEffect(() => {
-
     const { bill_to, date } = Details;
-    const isEmptyField = [bill_to, date].includes("");
+    const isEmptyField = [bill_to].includes("");
     if (Items.length > 0 && !isEmptyField) {
       SetSave(true);
       return;
@@ -57,14 +56,15 @@ function FlyoverInvoice() {
     resetItems();
     resetDetails();
   };
+  console.log(save);
 
   return (
     <div>
-      <div className="mb-4 flex flex-row">
+      <div className="mb-4 flex flex-row flex-wrap gap-4 rounded-lg border p-4 shadow-md">
         <Button
           type={`${save ? "primary" : "disabled"}`}
+          disabled={!save}
           title="Save"
-          className="mr-4"
           onClick={() => {
             saveItems();
             saveDetails();
@@ -74,26 +74,29 @@ function FlyoverInvoice() {
         <Button
           type="secondary"
           title="Preview Invoice"
-          className="mr-4"
           onClick={() => setToggleForm((state) => !state)}
         />
         <Button type="warning" title="Reset Data" onClick={() => resetForm()} />
-        <a
-          className="mx-4 rounded-lg bg-blue-800 px-6 py-2 text-white"
-          download
-          href={`/api/pages.pdf?data=${JSON.stringify(
-            Items
-          )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify({
-            total: totalPrice(),
-            finalTotal: totalPrice() - Details.discount,
-          })}&inv_number=${Details.invoice_number}`}
-        >
-          Download PDF
-        </a>
+        {save && (
+          <a
+            className="rounded-lg bg-blue-800 px-6 py-2 text-sm text-white"
+            // download
+            href={`/api/pages.pdf?data=${JSON.stringify(
+              Items
+            )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify(
+              {
+                total: totalPrice(),
+                finalTotal: totalPrice() - Details.discount,
+              }
+            )}&inv_number=${Details.invoice_number}`}
+          >
+            Download PDF
+          </a>
+        )}
       </div>
       <div className="flex min-h-screen flex-col lg:flex-row">
         <div
-          className={`min-h-screen w-full rounded-xl bg-white px-12 pt-6 ${
+          className={`min-h-screen w-full rounded-xl border bg-white px-5 pt-6 shadow-md lg:px-12 ${
             toggleForm ? "w-full" : "lg:w-1/2"
           } `}
         >
@@ -109,8 +112,8 @@ function FlyoverInvoice() {
         </div>
         {!toggleForm && (
           <div
-            className={`ml-0 mt-4  min-h-screen w-full rounded-xl
-             bg-white p-12 lg:ml-4 lg:mt-0 lg:w-1/2`}
+            className={`ml-0 mt-4 min-h-screen w-full rounded-xl border bg-white
+             p-12 shadow-md lg:ml-4 lg:mt-0 lg:w-1/2`}
           >
             <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
           </div>

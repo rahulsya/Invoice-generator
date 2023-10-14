@@ -1,6 +1,6 @@
 "use client";
 import Input from "@/components/Input";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import InvoiceItem from "./invoice-items";
 import { formatNumber, generateInvoice } from "@/utils";
 import { Details, Item } from "@/@types/types";
@@ -66,17 +66,15 @@ function Form({
       >
         GenerateNumber
       </button>
-      <div className="mt-4 flex flex-row items-start">
-        <div className="w-1/2">
+      <div className="mt-4 flex flex-col items-center lg:flex-row">
+        <div className="w-full lg:w-1/2">
           <div className="text-sm font-semibold">{invDetail.storeName}</div>
           <div>{invDetail.storeAddress}</div>
           <div>
             {invDetail.phoneNumber} - {invDetail.phoneNumber2}
           </div>
         </div>
-        <div className="mx-4" />
-
-        <div className="w-1/2">
+        <div className="mt-4 w-full lg:mt-0 lg:w-1/2">
           <Input
             onChange={(e) => onChangeDetails(e)}
             value={Details?.bill_to}
@@ -85,23 +83,16 @@ function Form({
             name="bill_to"
             type="text"
           />
+          <div className="my-2"></div>
+          <Input
+            onChange={(e) => onChangeDetails(e)}
+            title="Tanggal"
+            type="date"
+            name="date"
+          />
         </div>
       </div>
-      <div className="mt-4 flex w-1/4 flex-row">
-        <Input
-          onChange={(e) => onChangeDetails(e)}
-          title="Tanggal"
-          type="date"
-          name="date"
-        />
-        {/* <div className="mx-4" />
-        <Input
-          onChange={(e) => onChangeDetails(e)}
-          title="Due date"
-          type="date"
-          name="due_date"
-        /> */}
-      </div>
+
       {/* items */}
       <div className="mt-8 rounded bg-gray-100 p-4">
         {/* form grup */}
@@ -130,16 +121,7 @@ function Form({
       </div>
       {/* end items */}
       <div className="mt-12 flex flex-row items-start">
-        <div className="w-1/2">
-          {/* <Input
-            onChange={(e) => onChangeDetails(e)}
-            value={Details?.notes}
-            placeholder="Notes"
-            title="Notes"
-            type="text-area"
-            name="notes"
-          /> */}
-        </div>
+        <div className="w-1/2"></div>
         <div className="flex w-1/2 flex-row items-center justify-end text-sm">
           <div className="pr-4 font-semibold text-gray-500">
             <div className="pb-2">Sub Total</div>
