@@ -51,7 +51,9 @@ export default function Input({
         type={type}
         name={name}
         placeholder={placeholder}
-        className="w-full rounded-md border border-gray-400 p-2"
+        className={`w-full rounded-md border border-gray-400 p-2 ${
+          disable && "bg-gray-400 text-gray-100"
+        }`}
         onChange={onChange}
         value={value}
         disabled={disable}
