@@ -4,7 +4,7 @@ type IProps = {
   title: string;
   onClick?: () => void;
   className?: string;
-  type?: "primary" | "secondary" | "warning" | "disabled";
+  type?: "primary" | "secondary" | "warning" | "disabled" | "success";
   disabled?: boolean;
 };
 
@@ -20,6 +20,7 @@ function Button({
     secondary: "text-sm bg-white text-blue-800 border",
     warning: "text-sm bg-yellow-200 text-yellow-800",
     disabled: "text-sm bg-gray-200 text-gray-500",
+    success: "text-sm bg-green-600 text-gray-100",
   };
 
   return (

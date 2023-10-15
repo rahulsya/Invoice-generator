@@ -46,7 +46,7 @@ function SideNavigation() {
               key={index}
               className="mb-2 w-full cursor-pointer px-0 lg:px-8"
             >
-              <Link href={`${menu.link}`}>
+              <Link href={`${menu.link}`} onClick={() => setIsShowMenu(false)}>
                 <div
                   className={`flex rounded p-3 text-sm font-semibold ${
                     active
@@ -98,7 +98,7 @@ function SideNavigation() {
 
         {/* menus */}
         {isShowMenu && (
-          <div className="absolute mt-[70px] block w-full border-b bg-white shadow lg:hidden">
+          <div className="absolute mt-[70px] block h-full w-full border-b bg-white shadow lg:hidden">
             <Menu />
           </div>
         )}

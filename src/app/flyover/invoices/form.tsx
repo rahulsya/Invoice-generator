@@ -36,22 +36,11 @@ function Form({
     setDetails({ ...Details, [event.target.name]: event.target.value });
   };
 
-  useEffect(() => {
-    if (Details.invoice_number == "" || Details.invoice_number == null) {
-      setDetails({ ...Details, invoice_number: generateInvoice() });
-    }
-  }, [Details, setDetails]);
-
-  // console.log(generateInvoice());
-
-  const onRegenerateNumber = () => {
-    setDetails({ ...Details, invoice_number: generateInvoice() });
-  };
-
   return (
     <div className="w-full text-sm">
       <div className="flex flex-row">
         <Input
+          disable={true}
           onChange={(e) => onChangeDetails(e)}
           value={Details?.invoice_number}
           placeholder="#0001"
@@ -60,12 +49,6 @@ function Form({
           type="text"
         />
       </div>
-      <button
-        onClick={() => onRegenerateNumber()}
-        className="mt-2 rounded bg-blue-500 px-2 py-2 text-xs text-white"
-      >
-        GenerateNumber
-      </button>
       <div className="mt-4 flex flex-col items-center lg:flex-row">
         <div className="w-full lg:w-1/2">
           <div className="text-sm font-semibold">{invDetail.storeName}</div>
