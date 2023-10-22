@@ -32,10 +32,10 @@ function FlyoverInvoice() {
   const onSaveInvoice = async () => {
     setLoading(true);
     const data = await saveInvoice({ ...Details, items: [...Items] });
-    console.log(data);
     if (data) {
       router.push(`/flyover/invoices?inv=${data?.id}`);
     }
+    alert("Invoice tersimpan");
     setLoading(false);
   };
 
@@ -112,7 +112,7 @@ function FlyoverInvoice() {
           </a>
         )}
       </div>
-      <div className="flex min-h-screen flex-col lg:flex-row">
+      <div className="flex min-h-screen flex-col-reverse lg:flex-row">
         <div
           className={`min-h-screen w-full rounded-xl border bg-white px-5 pt-6 shadow-md lg:px-12 ${
             toggleForm ? "w-full" : "lg:w-1/2"
@@ -130,8 +130,8 @@ function FlyoverInvoice() {
         </div>
         {!toggleForm && (
           <div
-            className={`ml-0 mt-4 min-h-screen w-full rounded-xl border bg-white
-             p-12 shadow-md lg:ml-4 lg:mt-0 lg:w-1/2`}
+            className={`mb-4 ml-0 mt-4 min-h-screen w-full rounded-xl border
+            bg-white p-2 shadow-md lg:ml-4 lg:mt-0 lg:w-1/2 lg:p-12`}
           >
             <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
           </div>

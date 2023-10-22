@@ -30,7 +30,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="flex flex-row items-center justify-between">
         <div>
           <div className="text-xl font-bold">INVOICE</div>
-          <div className="text-lg font-semibold uppercase text-blue-600">
+          <div className="text-sm font-semibold uppercase text-blue-600 lg:text-lg">
             # {invoice_number}
           </div>
         </div>
@@ -45,8 +45,8 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* end title header */}
 
       {/* addres */}
-      <div className="mt-10 flex flex-row">
-        <div className="mr-12 text-sm">
+      <div className="mt-0 flex w-full flex-col-reverse gap-4 md:mt-10 lg:flex-row">
+        <div className="text-sm">
           <div className="text-sm font-semibold">{invDetail.storeName}</div>
           <div>{invDetail.storeAddress}</div>
           <div>
@@ -55,35 +55,35 @@ function Preview({ Items, Details, totalPrice }: IProps) {
         </div>
         <div className="text-sm">
           <div>Pelanggan : </div>
-          {bill_to && (
-            <div className="w-[250px] text-sm font-semibold">{bill_to}</div>
-          )}
+          {bill_to && <div className="text-sm font-semibold">{bill_to}</div>}
         </div>
       </div>
       {/* end address */}
 
       {/* items */}
-      <table className="mt-12 w-full table-fixed text-sm">
+      <table className="mt-4 w-full table-fixed text-[10px] md:mt-12 md:text-sm">
         <thead className="rounded bg-gray-200 py-12">
           <tr className="text-gray-600">
-            <th className="px-4 py-4 text-start">Nama Produk</th>
-            <th className="px-4 py-4 text-start">Harga</th>
-            {/* <th className="text-start px-4 py-4">Qty Roll</th> */}
-            <th className="px-4 py-4 text-start">Qty</th>
-            <th className="px-4 py-4 text-start">Total</th>
+            <th className="px-2 py-4 text-start md:px-4">Nama Produk</th>
+            <th className="px-2 py-4 text-start md:px-4">Harga</th>
+            {/* <th className="text-start px-2 md:px-4 py-4">Qty Roll</th> */}
+            <th className="px-2 py-4 text-start md:px-4">Qty</th>
+            <th className="px-2 py-4 text-start md:px-4">Total</th>
           </tr>
         </thead>
         <tbody>
           {Items.map((item) => (
             <tr key={item.id} className="border">
-              <td className="px-4 py-3">{item.name}</td>
-              <td className="px-4 py-3">{formatNumber(item.price)}</td>
+              <td className=" break-words px-2 py-3 md:px-4">{item.name}</td>
+              <td className="break-words px-2 py-3 md:px-4">
+                {formatNumber(item.price)}
+              </td>
               {/* <td className="px-4 py-3">{item.qtyRoll} / ROll </td> */}
-              <td className="px-4 py-3">
+              <td className="break-words px-2 py-3 md:px-4">
                 {item.qty != 0 && `${item.qty} Meter`}
                 {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
               </td>
-              <td className="px-4 py-3">
+              <td className="break-words px-2 py-3 md:px-4">
                 {formatNumber(
                   item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
                 )}
@@ -95,7 +95,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* end items */}
 
       {/* total */}
-      <div className="mt-4 flex flex-row items-center justify-end text-sm">
+      <div className="my-4 flex flex-row items-center justify-end text-xs md:text-sm">
         <div className="mr-12 space-y-2 font-semibold text-gray-500">
           <div>Sub Total</div>
           {/* <div>Discount</div> */}
@@ -125,15 +125,17 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       </div>
       {/* end notes */}
 
-      <div className="mt-12 w-full rounded bg-blue-500 p-12 text-sm text-white">
-        <div className="flex flex-row justify-between">
+      <div className="mt-4 w-full rounded bg-blue-500 p-4 text-sm text-white md:mt-12 lg:p-12">
+        <div className="flex flex-col justify-between md:flex-row">
           <div>
             <div className="py-2 font-bold">Tanggal Invoice</div>
             <div>{date}</div>
           </div>
           <div>
-            <div className="py-2 text-end font-bold">Total Amount</div>
-            <div className="text-2xl">{formatFinalTotal}</div>
+            <div className="py-2 text-start font-bold md:text-end">
+              Total Amount
+            </div>
+            <div className="text-md lg:text-2xl">{formatFinalTotal}</div>
           </div>
         </div>
       </div>
