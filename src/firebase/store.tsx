@@ -7,6 +7,9 @@ import {
   getDoc,
   getDocs,
   CollectionReference,
+  serverTimestamp,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import firebase_app from "./config";
 import { CreateInvoiceDto, Invoice } from "@/models/invoices";
@@ -17,6 +20,7 @@ export const saveInvoice = async (data: CreateInvoiceDto) => {
   try {
     await setDoc(doc(db, "invoices", data.invoice_number), {
       ...data,
+      timestamp: serverTimestamp(),
     });
     return {
       id: data.invoice_number,
@@ -41,9 +45,12 @@ export const getInvoiceDetail = async (id: string) => {
 
 export const getAllInvoices = async () => {
   try {
-    const querySnapshot = await getDocs(
-      collection(db, "invoices") as CollectionReference<Invoice>
-    );
+    const invoicesRef = collection(
+      db,
+      "invoices"
+    ) as CollectionReference<Invoice>;
+    const q = query(invoicesRef, orderBy("timestamp", "desc"));
+    const querySnapshot = await getDocs(q);
     let data: Invoice[] = [];
     querySnapshot.forEach((doc) => {
       data.push(doc.data());
