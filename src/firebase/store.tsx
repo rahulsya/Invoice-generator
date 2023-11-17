@@ -1,6 +1,5 @@
 import {
   getFirestore,
-  addDoc,
   collection,
   doc,
   setDoc,
@@ -10,6 +9,10 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from "firebase/firestore";
 import firebase_app from "./config";
 import { CreateInvoiceDto, Invoice } from "@/models/invoices";
@@ -43,19 +46,34 @@ export const getInvoiceDetail = async (id: string) => {
   }
 };
 
-export const getAllInvoices = async () => {
+export const getAllInvoices = async (
+  nextPage?: boolean,
+  lastData?: QueryDocumentSnapshot<Invoice, DocumentData>
+) => {
   try {
     const invoicesRef = collection(
       db,
       "invoices"
     ) as CollectionReference<Invoice>;
-    const q = query(invoicesRef, orderBy("timestamp", "desc"));
+    let q = query(invoicesRef, orderBy("timestamp", "desc"), limit(10));
+
+    if (nextPage) {
+      q = query(
+        invoicesRef,
+        orderBy("timestamp", "desc"),
+        startAfter(lastData),
+        limit(10)
+      );
+    }
+
     const querySnapshot = await getDocs(q);
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
     let data: Invoice[] = [];
     querySnapshot.forEach((doc) => {
       data.push(doc.data());
     });
-    return data;
+    return { data, lastVisible };
   } catch (error) {
     console.log(error);
   }
