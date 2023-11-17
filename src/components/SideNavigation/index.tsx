@@ -98,7 +98,7 @@ function SideNavigation() {
 
         {/* menus */}
         {isShowMenu && (
-          <div className="absolute mt-[70px] block h-full w-full border-b bg-white shadow lg:hidden">
+          <div className="absolute mt-[70px] block min-h-screen w-full border-b bg-white shadow lg:hidden">
             <Menu />
           </div>
         )}

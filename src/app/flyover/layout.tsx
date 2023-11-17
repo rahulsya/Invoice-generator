@@ -49,15 +49,17 @@ function FlyoverInvoiceLayout({ children }: Iprops) {
   };
 
   return (
-    <div className="w-full bg-white">
-      <div className="relative flex min-h-screen flex-col lg:flex-row">
-        <div className="min-w-[300px] border">
+    <div className="h-screen w-full bg-white">
+      <div className="relative flex h-full flex-col lg:flex-row">
+        <div className="min-w-[300px] border-r">
           <SideNavigation />
         </div>
         {!user ? (
           <Loader />
         ) : (
-          <div className="mx-0 mt-4 w-full lg:mx-4 lg:w-5/6">{children}</div>
+          <div className="h-screen w-full overflow-y-auto px-0 py-4 lg:w-5/6 lg:px-4">
+            {children}
+          </div>
         )}
       </div>
     </div>
