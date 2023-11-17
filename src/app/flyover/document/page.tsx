@@ -5,33 +5,61 @@ import { getAllInvoices } from "@/firebase/store";
 import { Invoice } from "@/models/invoices";
 
 import Link from "next/link";
+import Button from "@/components/button";
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { log } from "console";
 
 function Document() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [lastVisibleData, SetlastVisibleData] =
+    useState<QueryDocumentSnapshot<Invoice, DocumentData>>();
   const [loading, setloading] = useState(false);
+  const [disableNextPageButton, setDisableNextPageButton] = useState(false);
 
   useEffect(() => {
-    setloading(true);
-    getAllInvoices()
-      .then((data) => {
-        setloading(false);
-        setInvoices(data || []);
-      })
-      .catch((err) => {
-        setloading(false);
-        console.log(err);
-      });
+    getInvoices();
   }, []);
+
+  const handleNextFetch = async () => {
+    try {
+      setloading(true);
+      const newDataInvoices = await getAllInvoices(true, lastVisibleData);
+      if (newDataInvoices) {
+        setloading(false);
+        if (
+          !newDataInvoices.data.length &&
+          newDataInvoices.lastVisible == undefined
+        ) {
+          setDisableNextPageButton(true);
+        }
+        setInvoices((state) => [...state, ...newDataInvoices.data]);
+        SetlastVisibleData(newDataInvoices.lastVisible);
+      }
+    } catch (error) {
+      setloading(false);
+      console.log(error);
+    }
+  };
+
+  const getInvoices = async () => {
+    try {
+      setloading(true);
+      let response = await getAllInvoices();
+      if (response) {
+        setloading(false);
+        SetlastVisibleData(response?.lastVisible);
+        setInvoices(response?.data || []);
+      }
+    } catch (error) {
+      setloading(false);
+      console.log(error);
+    }
+  };
 
   return (
     <div className="px-5 pt-5">
       <div className="text-lg font-bold">Invoices </div>
       <div className="text-sm text-gray-500">List History Data invoice</div>
-      {loading && (
-        <div className="mt-4 text-sm font-semibold text-gray-600">
-          Loading Data....
-        </div>
-      )}
 
       <div className="mt-4 grid cursor-pointer grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-4">
         {invoices.length > 0 &&
@@ -55,6 +83,20 @@ function Document() {
               </Link>
             );
           })}
+      </div>
+
+      {loading && (
+        <div className="mt-4 text-center text-sm font-semibold text-blue-600">
+          Loading Data....
+        </div>
+      )}
+      <div className="bg-gray-20 mt-4 flex justify-end gap-4">
+        <Button
+          disabled={disableNextPageButton ? disableNextPageButton : loading}
+          title="Next"
+          type={disableNextPageButton || loading ? "disabled" : "primary"}
+          onClick={() => handleNextFetch()}
+        />
       </div>
     </div>
   );
