@@ -210,10 +210,7 @@ function PdfDocument({
           <View key={item.id} style={styles.tableRow}>
             <Text style={styles.rowDescription}>{item.name}</Text>
             <Text style={styles.rowQty}>{formatNumber(item.price)}</Text>
-            <Text style={styles.rowRate}>
-              {item.qty != 0 && `${item.qty} Meter`}
-              {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
-            </Text>
+            <Text style={styles.rowRate}>{`${item.qty} ${item.unitType}`}</Text>
             <Text style={styles.rowAmount}>
               {formatNumber(
                 item.price * (item.qty != 0 ? item.qty : item.qtyRoll)

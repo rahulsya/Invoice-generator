@@ -14,6 +14,7 @@ function useItem() {
         price: 0,
         qty: 0,
         qtyRoll: 0,
+        unitType: "Meter",
       },
     ]);
   };
@@ -35,10 +36,10 @@ function useItem() {
     localStorage.setItem("items", JSON.stringify(Items));
   };
 
-  const resetItems=()=>{
-    setItems([])
+  const resetItems = () => {
+    setItems([]);
     localStorage.setItem("items", JSON.stringify([]));
-  }
+  };
 
   return {
     Items,
@@ -47,7 +48,7 @@ function useItem() {
     removeItem,
     totalPrice,
     saveItems,
-    resetItems
+    resetItems,
   };
 }
 

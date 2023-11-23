@@ -79,9 +79,12 @@ function Preview({ Items, Details, totalPrice }: IProps) {
                 {formatNumber(item.price)}
               </td>
               {/* <td className="px-4 py-3">{item.qtyRoll} / ROll </td> */}
-              <td className="break-words px-2 py-3 md:px-4">
+              {/* <td className="break-words px-2 py-3 md:px-4">
                 {item.qty != 0 && `${item.qty} Meter`}
                 {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
+              </td> */}
+              <td className="break-words px-2 py-3 md:px-4">
+                {`${item.qty} ${item.unitType}`}
               </td>
               <td className="break-words px-2 py-3 md:px-4">
                 {formatNumber(
