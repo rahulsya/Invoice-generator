@@ -4,6 +4,7 @@ export type Item = {
   price: number;
   qty: number;
   qtyRoll: number;
+  unitType: "Meter" | "Rool" | string;
   // total: number;
 };
 export type Details = {

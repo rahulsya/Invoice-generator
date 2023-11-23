@@ -61,23 +61,28 @@ function InvoiceItem({
         </div>
         <div className="w-full lg:mr-3 lg:w-[100px]">
           <Input
-            name="qtyRoll"
-            placeholder="qtyRoll"
-            onChange={(e) => setItem(e)}
-            title={showHeader ? "Qty Roll" : ""}
-            type="number"
-            value={item?.qtyRoll.toString()}
-          />
-        </div>
-        <div className="w-full lg:mr-3 lg:w-[100px]">
-          <Input
             name="qty"
             placeholder="Qty"
             onChange={(e) => setItem(e)}
-            title={showHeader ? "Qty Meter" : ""}
+            title={showHeader ? "Qty" : ""}
             type="number"
             value={item?.qty.toString()}
           />
+        </div>
+        <div className="w-full lg:mr-3 lg:w-[100px]">
+          {showHeader && (
+            <div className={`pb-1 text-xs text-gray-500`}>Satuan</div>
+          )}
+          <select
+            className="w-full rounded-md border border-gray-400 p-2"
+            value={item?.unitType}
+            name="unitType"
+            onChange={(e: any) => setItem(e)}
+          >
+            <option value="Roll">Roll</option>
+            <option value="Meter">Meter</option>
+            <option value="Pcs">Pcs</option>
+          </select>
         </div>
         <div className="w-full lg:mr-3 lg:w-[200px]">
           <Input
