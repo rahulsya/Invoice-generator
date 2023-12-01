@@ -1,4 +1,3 @@
-"use client";
 import { AuthContextProvider } from "@/firebase/AuthContext";
 import "./globals.css";
 import type { Metadata } from "next";
