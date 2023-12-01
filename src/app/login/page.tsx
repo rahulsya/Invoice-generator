@@ -34,15 +34,15 @@ function Login() {
 
   useEffect(() => {
     if (user) {
-      router.push("/flyover/invoices");
+      router.push("/invoices");
     }
   }, [user]);
 
   return (
-    <div className="flex justify-center items-center w-full min-h-screen">
-      <div className="mx-2 w-[400px] border  py-12 px-8 rounded">
+    <div className="flex min-h-screen w-full items-center justify-center">
+      <div className="mx-2 w-[400px] rounded  border px-8 py-12">
         {authLoading && <div>Check status login...</div>}
-        <div className="text-lg lg:text-2xl pb-6 font-bold">Log In</div>
+        <div className="pb-6 text-lg font-bold lg:text-2xl">Log In</div>
         <Input
           title="Email"
           type="email"
@@ -61,7 +61,7 @@ function Login() {
         <button
           onClick={() => onSubmitLogin()}
           disabled={loading}
-          className="w-full bg-blue-500 px-2 py-3 text-white rounded my-4"
+          className="my-4 w-full rounded bg-blue-500 px-2 py-3 text-white"
         >
           {loading ? "Loading.." : "Login"}
         </button>

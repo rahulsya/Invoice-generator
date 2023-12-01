@@ -29,34 +29,37 @@ function InvoiceItem({
     });
   };
 
-  const totalPrice = item?.price && item?.qty ? item.price * item.qty : 0;
+  const totalPrice =
+    item?.price && (item?.qty || item.qtyRoll)
+      ? item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
+      : 0;
 
   return (
     <div>
-      <div className="flex flex-row items-center mb-4 text-sm">
-        <div className="w-[400px] mr-3">
+      <div className="mb-4 flex w-full flex-col items-center text-sm lg:flex-row">
+        <div className="w-full lg:mr-3 lg:w-[400px]">
           <Input
             name="name"
             placeholder="Product name"
             onChange={(e) => {
               setItem(e);
             }}
-            title={showHeader ? "Item" : ""}
+            title={showHeader ? "Nama Produk" : ""}
             type="text"
             value={item?.name}
           />
         </div>
-        <div className="w-[200px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[200px]">
           <Input
             name="price"
             placeholder="Price"
             onChange={(e) => setItem(e)}
-            title={showHeader ? "Price" : ""}
+            title={showHeader ? "Harga" : ""}
             type="number"
             value={item?.price.toString()}
           />
         </div>
-        <div className="w-[100px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[100px]">
           <Input
             name="qty"
             placeholder="Qty"
@@ -66,7 +69,22 @@ function InvoiceItem({
             value={item?.qty.toString()}
           />
         </div>
-        <div className="w-[200px] mr-3">
+        <div className="w-full lg:mr-3 lg:w-[100px]">
+          {showHeader && (
+            <div className={`pb-1 text-xs text-gray-500`}>Satuan</div>
+          )}
+          <select
+            className="w-full rounded-md border border-gray-400 p-2"
+            value={item?.unitType}
+            name="unitType"
+            onChange={(e: any) => setItem(e)}
+          >
+            <option value="Roll">Roll</option>
+            <option value="Meter">Meter</option>
+            <option value="Pcs">Pcs</option>
+          </select>
+        </div>
+        <div className="w-full lg:mr-3 lg:w-[200px]">
           <Input
             name="qty"
             placeholder="Qty"

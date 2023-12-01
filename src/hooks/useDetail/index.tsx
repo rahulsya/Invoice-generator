@@ -1,6 +1,6 @@
 "use cliet";
 import { Details } from "@/@types/types";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function useDetail() {
   const [Details, setDetails] = useState<Details>({
@@ -14,8 +14,8 @@ export default function useDetail() {
   });
 
   const saveDetails = () => {
-    console.log('save ',Details);
-    
+    console.log("save ", Details);
+
     localStorage.setItem("detail", JSON.stringify(Details));
   };
 

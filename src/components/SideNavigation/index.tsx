@@ -8,25 +8,25 @@ import { dashboardIC, fileIC, settingIC, menuIC } from "@/assets/icons";
 const Menus = [
   {
     title: "Dashboard",
-    link: "/flyover/dashboard",
+    link: "/dashboard",
     active: false,
     icon: dashboardIC,
   },
   {
     title: "Invoices",
-    link: "/flyover/invoices",
+    link: "/invoices",
     active: true,
     icon: fileIC,
   },
   {
     title: "Documents",
-    link: "/flyover/document",
+    link: "/document",
     active: false,
     icon: fileIC,
   },
   {
     title: "Settings",
-    link: "/flyover/setting",
+    link: "/setting",
     active: false,
     icon: settingIC,
   },
