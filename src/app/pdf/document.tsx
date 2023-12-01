@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Document,
   Page,
@@ -9,8 +9,6 @@ import {
   Font,
   Image,
 } from "@joshuajaco/react-pdf-renderer-bundled";
-import useItem from "@/hooks/useItem";
-import useDetail from "@/hooks/useDetail";
 import { formatNumber } from "@/utils";
 import { Details, Item } from "@/@types/types";
 import { invDetail } from "@/utils/detailInvoice";
@@ -165,13 +163,13 @@ function PdfDocument({
   summaryTotal,
   logoUrl,
 }: {
-  data: string;
-  detail: string;
+  data: Item[];
+  detail: Details | any;
   summaryTotal: string;
   logoUrl: string;
 }) {
-  const Items: Item[] = JSON.parse(data);
-  const Detail: Details = JSON.parse(detail);
+  const Items: Item[] = data;
+  const Detail: Details = detail;
   const Total: { total: number; finalTotal: number } = JSON.parse(summaryTotal);
 
   return (

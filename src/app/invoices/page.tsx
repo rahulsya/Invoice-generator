@@ -4,88 +4,139 @@ import Form from "./form";
 import Preview from "./preview";
 import useItem from "@/hooks/useItem";
 import useDetail from "@/hooks/useDetail";
+import Button from "@/components/button";
+import { getInvoiceDetail, saveInvoice } from "@/firebase/store";
 
-function Invoices() {
-  const { Items, setItems, addNewItem, removeItem, totalPrice, saveItems } =
-    useItem();
-  const { Details, setDetails, saveDetails } = useDetail();
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { generateInvoice } from "@/utils";
 
-  const [toggleForm, setToggleForm] = useState(false);
+function FlyoverInvoice() {
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const router = useRouter();
+  const {
+    Items,
+    setItems,
+    addNewItem,
+    removeItem,
+    totalPrice,
+    saveItems,
+    resetItems,
+  } = useItem();
+  const { Details, setDetails, saveDetails, resetDetails } = useDetail();
+
+  const [toggleForm, setToggleForm] = useState(true);
+  const [save, SetSave] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onSaveInvoice = async () => {
+    setLoading(true);
+    const data = await saveInvoice({ ...Details, items: [...Items] });
+    if (data) {
+      router.push(`/invoices?inv=${data?.id}`);
+    }
+    alert("Invoice tersimpan");
+    setLoading(false);
+  };
 
   useEffect(() => {
-    setItems(
-      localStorage.getItem("items")
-        ? JSON.parse(localStorage.getItem("items") || "")
-        : []
-    );
-    setDetails(
-      localStorage.getItem("detail")
-        ? JSON.parse(localStorage.getItem("detail") || "")
-        : {
-            invoice_number: "",
-            bill_from: "",
-            bill_to: "",
-            date: "",
-            due_date: "",
-            notes: "",
-            discount: 0,
+    const { bill_to, date } = Details;
+    const isEmptyField = [bill_to].includes("");
+    if (Items.length > 0 && !isEmptyField) {
+      SetSave(true);
+      return;
+    }
+    SetSave(false);
+  }, [Details, Items]);
+
+  useEffect(() => {
+    if (params?.get("inv")) {
+      const invNo = `${params?.get("inv")}`;
+      getInvoiceDetail(invNo)
+        .then((response) => {
+          if (response) {
+            const { items, ...rest } = response;
+            setDetails({ ...Details, ...rest });
+            setItems([...items]);
           }
-    );
-  }, []);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setDetails({ ...Details, invoice_number: generateInvoice() });
+    }
+  }, [params]);
 
   return (
     <div>
-      <button
-        onClick={() => {
-          saveItems();
-          saveDetails();
-        }}
-        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mr-4"
-      >
-        Save
-      </button>
-      <button
-        onClick={() => setToggleForm((state) => !state)}
-        className="py-2 px-6 rounded-lg bg-white text-blue-800 mb-4"
-      >
-        Toggle Form
-      </button>
-      <a
-        className="py-2 px-6 rounded-lg bg-blue-800 text-white mb-4 mx-4"
-        download
-        href={`/api/pages.pdf?data=${JSON.stringify(
-          Items
-        )}&detail=${JSON.stringify(Details)}&summary_total=${JSON.stringify({
-          total: totalPrice(),
-          finalTotal: totalPrice() - Details.discount,
-        })}&inv_number=${Details.invoice_number}`}
-      >
-        Download PDF
-      </a>
-      <div className="flex flex-col lg:flex-row min-h-screen">
+      <div className="mb-4 flex flex-row flex-wrap gap-4 rounded-lg border p-4 shadow-md">
+        {params?.get("inv") && (
+          <Button
+            type={`success`}
+            title={"Buat Invoice Baru"}
+            onClick={() => {
+              resetItems();
+              resetDetails();
+              router.push(`/invoices`);
+            }}
+          />
+        )}
+        <Button
+          type={`${save ? "primary" : "disabled"}`}
+          disabled={!save || loading}
+          title={loading ? "Processing..." : "Simpan"}
+          onClick={() => {
+            onSaveInvoice();
+          }}
+        />
+        <Button
+          type="secondary"
+          title="Lihat Invoice"
+          onClick={() => {
+            setToggleForm((state) => !state);
+          }}
+        />
+        {save && params?.get("inv") && (
+          <a
+            className="rounded-lg bg-yellow-800 px-6 py-2 text-sm text-white"
+            // download
+            href={`/api/pages.pdf?summary_total=${JSON.stringify({
+              total: totalPrice(),
+              finalTotal: totalPrice() - Details.discount,
+            })}&inv_number=${Details.invoice_number}`}
+          >
+            Download PDF
+          </a>
+        )}
+      </div>
+      <div className="flex min-h-screen flex-col-reverse lg:flex-row">
+        <div
+          className={`min-h-screen w-full rounded-xl border bg-white px-5 pt-6 shadow-md lg:px-12 ${
+            toggleForm ? "w-full" : "lg:w-1/2"
+          } `}
+        >
+          <Form
+            addNewItem={addNewItem}
+            removeItem={removeItem}
+            Items={Items}
+            totalPrice={totalPrice}
+            setItems={setItems}
+            setDetails={setDetails}
+            Details={Details}
+          />
+        </div>
         {!toggleForm && (
-          <div className="w-full min-h-screen lg:w-1/2 bg-white rounded-xl px-12 pt-6">
-            <Form
-              addNewItem={addNewItem}
-              removeItem={removeItem}
-              Items={Items}
-              totalPrice={totalPrice}
-              setItems={setItems}
-              setDetails={setDetails}
-              Details={Details}
-            />
+          <div
+            className={`mb-4 ml-0 mt-4 min-h-screen w-full rounded-xl border
+            bg-white p-2 shadow-md lg:ml-4 lg:mt-0 lg:w-1/2 lg:p-12`}
+          >
+            <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
           </div>
         )}
-        <div
-          className={`w-full min-h-screen ${
-            toggleForm ? "w-full" : "lg:w-1/2 ml-4"
-          }  mt-4 lg:mt-0 bg-white rounded-xl p-12`}
-        >
-          <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
-        </div>
       </div>
     </div>
   );
 }
 
-export default Invoices;
+export default FlyoverInvoice;

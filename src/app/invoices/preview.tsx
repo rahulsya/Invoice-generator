@@ -2,6 +2,8 @@
 import React from "react";
 import { Details, Item } from "@/@types/types";
 import { formatNumber } from "@/utils";
+import Image from "next/image";
+import { invDetail } from "@/utils/detailInvoice";
 
 type IProps = {
   Items: Item[];
@@ -25,55 +27,69 @@ function Preview({ Items, Details, totalPrice }: IProps) {
   return (
     <div>
       {/* title header */}
-      <div>
-        <div className="text-xl font-bold">INVOICE</div>
-        <div className="text-lg font-semibold text-blue-600 uppercase">
-          # {invoice_number}
+      <div className="flex flex-row items-center justify-between">
+        <div>
+          <div className="text-xl font-bold">INVOICE</div>
+          <div className="text-sm font-semibold uppercase text-blue-600 lg:text-lg">
+            # {invoice_number}
+          </div>
         </div>
+        <Image
+          alt="Flyover logo"
+          width={150}
+          height={150}
+          src={"/logoFlyover.png"}
+          priority
+        />
       </div>
       {/* end title header */}
 
       {/* addres */}
-      <div className="mt-12 flex flex-row">
-        <div className="mr-12 text-sm">
-          <div>From : </div>
-          {bill_from && (
-            <>
-              <div className="font-semibold">{bill_from.split(",")[0]}</div>
-              <div className="w-[250px] ">{bill_from}</div>
-            </>
-          )}
+      <div className="mt-0 flex w-full flex-col-reverse gap-4 md:mt-10 lg:flex-row">
+        <div className="text-sm">
+          <div className="text-sm font-semibold">{invDetail.storeName}</div>
+          <div>{invDetail.storeAddress}</div>
+          <div>
+            {invDetail.phoneNumber} - {invDetail.phoneNumber2}
+          </div>
         </div>
         <div className="text-sm">
-          <div>To : </div>
-          {bill_to && (
-            <>
-              <div className="font-semibold">{bill_to.split(",")[0]}</div>
-              <div className="w-[250px] text-sm">{bill_to}</div>
-            </>
-          )}
+          <div>Pelanggan : </div>
+          {bill_to && <div className="text-sm font-semibold">{bill_to}</div>}
         </div>
       </div>
       {/* end address */}
 
       {/* items */}
-      <table className="table-fixed w-full mt-12 text-sm">
-        <thead className="py-12 bg-gray-200 rounded">
-          <tr className="text-gray-600 ">
-            <th className="text-start px-4 py-4">Item Name</th>
-            <th className="text-start px-4 py-4">Price</th>
-            <th className="text-start px-4 py-4">Qty</th>
-            <th className="text-start px-4 py-4">Total</th>
+      <table className="mt-4 w-full table-fixed text-[10px] md:mt-12 md:text-sm">
+        <thead className="rounded bg-gray-200 py-12">
+          <tr className="text-gray-600">
+            <th className="px-2 py-4 text-start md:px-4">Nama Produk</th>
+            <th className="px-2 py-4 text-start md:px-4">Harga</th>
+            {/* <th className="text-start px-2 md:px-4 py-4">Qty Roll</th> */}
+            <th className="px-2 py-4 text-start md:px-4">Qty</th>
+            <th className="px-2 py-4 text-start md:px-4">Total</th>
           </tr>
         </thead>
         <tbody>
           {Items.map((item) => (
             <tr key={item.id} className="border">
-              <td className="px-4 py-3">{item.name}</td>
-              <td className="px-4 py-3">{formatNumber(item.price)}</td>
-              <td className="px-4 py-3">{item.qty}</td>
-              <td className="px-4 py-3">
-                {formatNumber(item.price * item.qty)}
+              <td className=" break-words px-2 py-3 md:px-4">{item.name}</td>
+              <td className="break-words px-2 py-3 md:px-4">
+                {formatNumber(item.price)}
+              </td>
+              {/* <td className="px-4 py-3">{item.qtyRoll} / ROll </td> */}
+              {/* <td className="break-words px-2 py-3 md:px-4">
+                {item.qty != 0 && `${item.qty} Meter`}
+                {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
+              </td> */}
+              <td className="break-words px-2 py-3 md:px-4">
+                {`${item.qty} ${item.unitType}`}
+              </td>
+              <td className="break-words px-2 py-3 md:px-4">
+                {formatNumber(
+                  item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
+                )}
               </td>
             </tr>
           ))}
@@ -82,35 +98,47 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* end items */}
 
       {/* total */}
-      <div className="flex flex-row justify-end mt-4 items-center text-sm">
-        <div className="text-gray-500 mr-12 font-semibold space-y-2">
+      <div className="my-4 flex flex-row items-center justify-end text-xs md:text-sm">
+        <div className="mr-12 space-y-2 font-semibold text-gray-500">
           <div>Sub Total</div>
-          <div>Discount</div>
+          {/* <div>Discount</div> */}
           <div>Total</div>
         </div>
-        <div className="text-end font-bold space-y-2">
+        <div className="space-y-2 text-end font-bold">
           <div>{formatTotal}</div>
-          <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div>
-          <div>{formatFinalTotal}</div>
+          {/* <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div> */}
+          <div>{formatTotal}</div>
         </div>
       </div>
       {/* end Total */}
 
       {/* notes */}
-      <div className="text-gray-500 text-sm font-bold">Notes</div>
-      <div className="text-sm py-2">{notes}</div>
+      <div className="text-sm font-bold text-gray-500">
+        *Informasi Pembayaran
+      </div>
+      <div className="py-2 text-sm font-semibold">
+        <div>
+          <span className="font-normal">Bank : </span>
+          {invDetail.bankAccountName}
+        </div>
+        <div>
+          <span className="font-normal">Nomor rekening : </span>
+          {invDetail.bankAccountNumber}
+        </div>
+      </div>
       {/* end notes */}
 
-      <div className="bg-blue-500 p-12 text-white text-sm rounded mt-12 w-full">
-        <div className="flex flex-row justify-between">
+      <div className="mt-4 w-full rounded bg-blue-500 p-4 text-sm text-white md:mt-12 lg:p-12">
+        <div className="flex flex-col justify-between md:flex-row">
           <div>
-            <div className="font-bold py-2">Invoice Details</div>
-            <div>Date issued : {date}</div>
-            <div>Due Date : {due_date}</div>
+            <div className="py-2 font-bold">Tanggal Invoice</div>
+            <div>{date}</div>
           </div>
           <div>
-            <div className="font-bold py-2 text-end">Total Amount</div>
-            <div className="text-2xl">{formatFinalTotal}</div>
+            <div className="py-2 text-start font-bold md:text-end">
+              Total Amount
+            </div>
+            <div className="text-md lg:text-2xl">{formatFinalTotal}</div>
           </div>
         </div>
       </div>

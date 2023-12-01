@@ -1,7 +1,8 @@
-import { AuthContextProvider, useAuthContext } from "@/firebase/AuthContext";
+import { AuthContextProvider } from "@/firebase/AuthContext";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Layout from "@/components/Layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <AuthContextProvider>
+          <Layout>{children}</Layout>
+        </AuthContextProvider>
       </body>
     </html>
   );

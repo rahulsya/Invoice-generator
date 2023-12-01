@@ -66,7 +66,7 @@ function Document() {
           invoices.map((item, index: number) => {
             return (
               <Link
-                href={`/flyover/invoices?inv=${item.invoice_number}`}
+                href={`/invoices?inv=${item.invoice_number}`}
                 key={index}
                 className="rounded-lg border p-6 shadow-lg hover:bg-gray-100"
               >
