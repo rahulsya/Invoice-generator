@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { dashboardIC, fileIC, settingIC, menuIC } from "@/assets/icons";
+import Button from "@/components/button";
+import { logout } from "@/firebase/auth";
 
 const Menus = [
   {
@@ -33,8 +35,17 @@ const Menus = [
 ];
 
 function SideNavigation() {
+  const router = useRouter();
   const pathname = usePathname();
   const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const onLogout = () => {
+    logout()
+      .then((response) => {
+        router.push("/login");
+      })
+      .catch((err) => console.log(err));
+  };
 
   const Menu = () => {
     return (
@@ -74,7 +85,7 @@ function SideNavigation() {
 
   return (
     <div className="h-full w-full bg-white">
-      <div className="flex flex-col">
+      <div className="flex h-full flex-col">
         {/* Company Logo */}
         <div className="flex flex-row justify-between border-b border-gray-300 px-4 py-4 lg:px-8">
           <div>
@@ -98,12 +109,16 @@ function SideNavigation() {
 
         {/* menus */}
         {isShowMenu && (
-          <div className="absolute mt-[70px] block min-h-screen w-full border-b bg-white shadow lg:hidden">
+          <div className="absolute mt-[70px] flex min-h-screen w-full flex-col border-b bg-white shadow lg:hidden">
             <Menu />
+            <Button className="m-2" title="Logout" onClick={onLogout} />
           </div>
         )}
-        <div className="mt-2 hidden lg:block">
-          <Menu />
+        <div className="mt-2 hidden h-full flex-col justify-between lg:flex">
+          <div>
+            <Menu />
+          </div>
+          <Button className="m-2" title="Logout" onClick={onLogout} />
         </div>
         {/* end menus */}
       </div>

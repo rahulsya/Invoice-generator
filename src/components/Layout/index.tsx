@@ -1,7 +1,7 @@
 "use client";
 import { useAuthContext } from "@/firebase/AuthContext";
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import SideNavigation from "@/components/SideNavigation";
 import Loader from "@/components/Loader";
 
@@ -11,6 +11,7 @@ type Iprops = {
 function Layout({ children }: Iprops) {
   const { user, authLoading } = useAuthContext();
   const router = useRouter();
+  const path = usePathname();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -18,10 +19,14 @@ function Layout({ children }: Iprops) {
     }
   }, [authLoading, user]);
 
+  if (path && ["/login"].includes(path)) {
+    return <div className="h-screen w-full bg-white">{children}</div>;
+  }
+
   return (
     <div className="h-screen w-full bg-white">
       <div className="relative flex h-full flex-col lg:flex-row">
-        <div className="min-w-[300px] border-r">
+        <div className="min-w-[300px] border-r bg-gray-400">
           <SideNavigation />
         </div>
         {!user ? (
