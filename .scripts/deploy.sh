@@ -4,7 +4,7 @@ set -e
 echo "Deployment started..."
 
 # Pull the latest version of the app
-GIT_SSH_COMMAND="ssh -i ~/.ssh/next_ed25519" git pull origin main
+git pull origin main
 echo "New changes copied to the server!"
 
 echo "Installing Dependencies..."
