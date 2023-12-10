@@ -7,6 +7,11 @@ echo "Deployment started..."
 git pull origin main
 echo "New changes copied to the server!"
 
+echo "npm version"
+node -v
+npm -v
+npm install -g yarn
+
 echo "Installing Dependencies..."
 yarn install
 
