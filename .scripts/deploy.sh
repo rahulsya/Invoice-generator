@@ -8,7 +8,7 @@ git pull origin main
 echo "New changes copied to the server!"
 
 echo "Installing Dependencies..."
-yarn
+yarn install
 
 echo "Creating Production Build..."
 yarn build
