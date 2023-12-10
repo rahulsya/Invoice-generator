@@ -23,5 +23,6 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: |
-            "cd /var/www/Invoice-generator && ./.scripts/deploy.sh"
+            cd /var/www/Invoice-generator && ./.scripts/deploy.sh
+            whoami
             ls -al
