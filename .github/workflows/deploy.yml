@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Print SSH Key
-        run: echo "${{ secrets.SSHKEY }}"
+        run: echo "the key is${{ secrets.SSHKEY }} end key"
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
