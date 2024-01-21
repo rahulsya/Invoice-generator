@@ -13,6 +13,7 @@ import {
   startAfter,
   QueryDocumentSnapshot,
   DocumentData,
+  where,
 } from "firebase/firestore";
 import firebase_app from "./config";
 import { CreateInvoiceDto, Invoice } from "@/models/invoices";
@@ -74,6 +75,49 @@ export const getAllInvoices = async (
       data.push(doc.data());
     });
     return { data, lastVisible };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getTotalDataSummaryByDate = async (date: Date) => {
+  try {
+    const invoicesRef = collection(
+      db,
+      "invoices"
+    ) as CollectionReference<Invoice>;
+
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(targetDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    const q = query(
+      invoicesRef,
+      where("timestamp", ">=", targetDate),
+      where("timestamp", "<=", endDate)
+    );
+    const querySnapshot = await getDocs(q);
+    let data: Invoice[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return { data };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getTotalData = async () => {
+  try {
+    const invoicesRef = collection(
+      db,
+      "invoices"
+    ) as CollectionReference<Invoice>;
+
+    const q = query(invoicesRef);
+    const querySnapshot = await getDocs(q);
+    return { total: querySnapshot.size };
   } catch (error) {
     console.log(error);
   }
