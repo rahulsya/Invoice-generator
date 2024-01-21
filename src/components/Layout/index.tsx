@@ -32,7 +32,7 @@ function Layout({ children }: Iprops) {
         {!user ? (
           <Loader />
         ) : (
-          <div className="h-screen w-full w-full overflow-y-auto px-0 py-4 lg:px-4">
+          <div className="h-screen w-full w-full overflow-y-auto px-0 pb-4 pt-8 lg:px-4">
             {children}
           </div>
         )}
