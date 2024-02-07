@@ -7,8 +7,9 @@ type IProps = {
     content: string;
   };
   cardType?: "with-bg" | "bordered-bg";
+  onClick?: () => void;
 };
-function CardSummary({ data, cardType = "with-bg" }: IProps) {
+function CardSummary({ data, cardType = "with-bg", onClick }: IProps) {
   const styles = {
     "with-bg": "bg-blue-200",
     "bordered-bg": "border-2 border-blue-200",
@@ -16,7 +17,8 @@ function CardSummary({ data, cardType = "with-bg" }: IProps) {
 
   return (
     <div
-      className={`flex w-full flex-col rounded rounded-lg p-[12px] lg:w-[255px] ${styles[cardType]}`}
+      className={`flex w-full flex-col rounded rounded-lg p-[12px] lg:w-[255px] ${styles[cardType]} cursor-pointer`}
+      onClick={onClick}
     >
       <div className="text-md font-semibold text-blue-600">{data.title}</div>
       <div className="text-xs text-blue-500">{data.desc}</div>

@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import CardSummary from "./card-summary";
 import { getTotalData, getTotalDataSummaryByDate } from "@/firebase/store";
 import { FormatDate } from "@/utils/date";
 
 function Dashboard() {
+  const router = useRouter();
   const [Summary, setSummary] = useState<{
     [field: string]: {
       title: string;
@@ -76,18 +78,29 @@ function Dashboard() {
     }));
   };
 
+  const redirectToInvoices = () => {
+    router.push("/document");
+  };
+
   return (
     <div className="flex flex-col gap-2 px-3">
       <div className="text-lg font-semibold">Dashboard.</div>
       <div className="flex flex-col gap-2">
         <div className="pt-4 text-lg text-sm">Summary</div>
         <div className="flex flex-col gap-2 lg:flex-row">
-          <CardSummary data={Summary["totalAllInvoice"]}></CardSummary>
           <CardSummary
+            onClick={() => redirectToInvoices()}
+            data={Summary["totalAllInvoice"]}
+          ></CardSummary>
+          <CardSummary
+            onClick={() => redirectToInvoices()}
             data={Summary["invoiceToday"]}
             cardType="bordered-bg"
           ></CardSummary>
-          <CardSummary data={Summary["invoiceYesterday"]}></CardSummary>
+          <CardSummary
+            onClick={() => redirectToInvoices()}
+            data={Summary["invoiceYesterday"]}
+          ></CardSummary>
         </div>
       </div>
     </div>
