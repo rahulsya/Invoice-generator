@@ -9,6 +9,7 @@ import { getInvoiceDetail, saveInvoice } from "@/firebase/store";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { generateInvoice } from "@/utils";
+import { FormatDate } from "@/utils/date";
 
 function FlyoverInvoice() {
   const pathname = usePathname();
@@ -31,6 +32,11 @@ function FlyoverInvoice() {
 
   const onSaveInvoice = async () => {
     setLoading(true);
+    let invoiceDetail = { ...Details };
+    if (invoiceDetail.date == "") {
+      invoiceDetail = { ...invoiceDetail, date: FormatDate(new Date(), false) };
+    }
+
     const data = await saveInvoice({ ...Details, items: [...Items] });
     if (data) {
       router.push(`/invoices?inv=${data?.id}`);

@@ -69,6 +69,7 @@ function Form({
           <div className="my-2"></div>
           <Input
             onChange={(e) => onChangeDetails(e)}
+            value={Details?.date}
             title="Tanggal"
             type="date"
             name="date"
