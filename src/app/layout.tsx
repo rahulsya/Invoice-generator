@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Layout from "@/components/Layout";
+import { Providers } from "./providers";
 
 const inter = Poppins({ weight: "400", subsets: ["latin"] });
 
@@ -19,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthContextProvider>
-          <Layout>{children}</Layout>
-        </AuthContextProvider>
+        <Providers>
+          <AuthContextProvider>
+            <Layout>{children}</Layout>
+          </AuthContextProvider>
+        </Providers>
       </body>
     </html>
   );
