@@ -4,6 +4,7 @@ import { Details, Item } from "@/@types/types";
 import { formatNumber } from "@/utils";
 import Image from "next/image";
 import { invDetail } from "@/utils/detailInvoice";
+import useSettings from "@/hooks/useSettings";
 
 type IProps = {
   Items: Item[];
@@ -22,6 +23,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
     date,
   } = Details;
 
+  const { settings } = useSettings();
   const formatTotal = formatNumber(totalPrice());
   const formatFinalTotal = formatNumber(totalPrice() - Details.discount);
   return (
@@ -47,11 +49,11 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       {/* addres */}
       <div className="mt-0 flex w-full flex-col-reverse gap-4 md:mt-10 lg:flex-row">
         <div className="text-sm">
-          <div className="text-sm font-semibold">{invDetail.storeName}</div>
-          <div>{invDetail.storeAddress}</div>
-          <div>
-            {invDetail.phoneNumber} - {invDetail.phoneNumber2}
+          <div className="text-sm font-semibold">
+            {settings.application_name}
           </div>
+          <div>{settings.address}</div>
+          <div>{settings.phone_number}</div>
         </div>
         <div className="text-sm">
           <div>Pelanggan : </div>

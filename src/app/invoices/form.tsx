@@ -1,11 +1,12 @@
 "use client";
 import Input from "@/components/Input";
-import React, { useEffect, useState, Fragment } from "react";
+import React from "react";
 import InvoiceItem from "./invoice-items";
-import { formatNumber, generateInvoice } from "@/utils";
+import { formatNumber } from "@/utils";
 import { Details, Item } from "@/@types/types";
-import { invDetail } from "@/utils/detailInvoice";
+// import { invDetail } from "@/utils/detailInvoice";
 import useDimensions from "@/hooks/useDimension";
+import useSettings from "@/hooks/useSettings";
 
 type IProps = {
   Items: Item[];
@@ -27,6 +28,7 @@ function Form({
   Details,
   setDetails,
 }: IProps) {
+  const { settings } = useSettings();
   const { height, width } = useDimensions();
   const formatTotal = formatNumber(totalPrice());
 
@@ -51,11 +53,11 @@ function Form({
       </div>
       <div className="mt-4 flex flex-col items-center lg:flex-row">
         <div className="w-full lg:w-1/2">
-          <div className="text-sm font-semibold">{invDetail.storeName}</div>
-          <div>{invDetail.storeAddress}</div>
-          <div>
-            {invDetail.phoneNumber} - {invDetail.phoneNumber2}
+          <div className="text-sm font-semibold">
+            {settings.application_name}
           </div>
+          <div>{settings.address}</div>
+          <div>{settings.phone_number}</div>
         </div>
         <div className="mt-4 w-full lg:mt-0 lg:w-1/2">
           <Input

@@ -25,3 +25,14 @@ export type StickerItem = {
   qty: number;
   qtyRoll: number;
 };
+
+export interface Settings {
+  application_name: string;
+  logo_url: string;
+  address: string;
+  bank_name: string;
+  bank_account_number: string;
+  logo: File | null;
+  file_name: string;
+  phone_number: string;
+}
