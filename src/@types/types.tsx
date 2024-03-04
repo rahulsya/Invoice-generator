@@ -32,4 +32,7 @@ export interface Settings {
   address: string;
   bank_name: string;
   bank_account_number: string;
+  logo: File | null;
+  file_name: string;
+  phone_number: string;
 }

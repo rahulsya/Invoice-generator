@@ -6,6 +6,7 @@ import Image from "next/image";
 import { dashboardIC, fileIC, settingIC, menuIC } from "@/assets/icons";
 import Button from "@/components/button";
 import { logout } from "@/firebase/auth";
+import useSettings from "@/hooks/useSettings";
 
 const Menus = [
   {
@@ -35,6 +36,7 @@ const Menus = [
 ];
 
 function SideNavigation() {
+  const { settings } = useSettings();
   const router = useRouter();
   const pathname = usePathname();
   const [isShowMenu, setIsShowMenu] = useState(false);
@@ -89,7 +91,7 @@ function SideNavigation() {
         {/* Company Logo */}
         <div className="flex flex-row justify-between border-b border-gray-300 px-4 py-4 lg:px-8">
           <div>
-            <div className="text-sm font-bold">Flyover Sticker</div>
+            <div className="text-sm font-bold">{settings.application_name}</div>
             <div className="text-xs font-semibold text-gray-500">Workspace</div>
           </div>
           <button
