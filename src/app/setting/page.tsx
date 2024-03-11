@@ -1,9 +1,10 @@
 "use client";
+import React, { useEffect } from "react";
 import { Image } from "@nextui-org/image";
 import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import React from "react";
 import useSettings from "@/hooks/useSettings";
+import { getSettings } from "@/firebase/settings";
 
 function Setting() {
   const {
@@ -13,6 +14,15 @@ function Setting() {
     onSetFileSetting,
     saveConfiguration,
   } = useSettings();
+
+  useEffect(() => {
+    getDataSetting();
+  }, []);
+
+  const getDataSetting = async () => {
+    const data = await getSettings();
+    console.log(data);
+  };
 
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,6 +62,7 @@ function Setting() {
                   onSetFileSetting(e.target.files[0]);
                 }
               }}
+              accept="image/*"
             />
           </div>
           <div className="flex flex-col gap-2">

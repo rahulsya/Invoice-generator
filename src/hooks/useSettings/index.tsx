@@ -1,5 +1,6 @@
 "use client";
 import { Settings } from "@/@types/types";
+import { storeImage, getSettings, saveSetting } from "@/firebase/settings";
 import { useEffect, useState } from "react";
 
 function useSettings() {
@@ -29,7 +30,7 @@ function useSettings() {
     const setting = localStorage.getItem("settings");
     if (setting) {
       const data = JSON.parse(setting);
-      setSettings(data);
+      setSettings({ ...data, logo: null });
     } else {
       setSettings(defaultSettings);
     }
@@ -48,8 +49,20 @@ function useSettings() {
     }));
   };
 
-  const saveConfiguration = () => {
-    localStorage.setItem("settings", JSON.stringify(settings));
+  const saveConfiguration = async () => {
+    const { logo, ...restSettings } = settings;
+
+    await saveSetting({
+      application_name: restSettings.application_name,
+      address: restSettings.address,
+      bank_name: restSettings.bank_name,
+      bank_account_number: restSettings.bank_account_number,
+      phone_number: restSettings.phone_number,
+    });
+
+    if (logo != null) {
+      await storeImage(logo);
+    }
   };
 
   return {
