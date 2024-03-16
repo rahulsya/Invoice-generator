@@ -51,17 +51,17 @@ function useSettings() {
 
   const saveConfiguration = async () => {
     const { logo, ...restSettings } = settings;
-
     await saveSetting({
       application_name: restSettings.application_name,
       address: restSettings.address,
       bank_name: restSettings.bank_name,
       bank_account_number: restSettings.bank_account_number,
       phone_number: restSettings.phone_number,
+      logo_url: restSettings.logo_url,
     });
 
     if (logo != null) {
-      await storeImage(logo);
+      await storeImage(logo, settings);
     }
   };
 
