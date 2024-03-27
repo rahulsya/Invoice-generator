@@ -1,9 +1,11 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import { Image } from "@nextui-org/image";
 import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
-import React from "react";
 import useSettings from "@/hooks/useSettings";
+import { getSettings } from "@/firebase/settings";
+import { Settings } from "@/@types/types";
 
 function Setting() {
   const {
@@ -14,10 +16,29 @@ function Setting() {
     saveConfiguration,
   } = useSettings();
 
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDataSetting();
+  }, []);
+
+  const getDataSetting = async () => {
+    const data = await getSettings();
+    if (data) {
+      setSettings(data as Settings);
+    }
+  };
+
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     onSetSetting(event.target.name, event.target.value);
+  };
+
+  const onSave = async () => {
+    setLoading(true);
+    await saveConfiguration();
+    setLoading(false);
   };
 
   return (
@@ -52,6 +73,7 @@ function Setting() {
                   onSetFileSetting(e.target.files[0]);
                 }
               }}
+              accept="image/*"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -92,7 +114,11 @@ function Setting() {
             />
           </div>
           <div className="flex justify-end">
-            <Button onClick={() => saveConfiguration()} color="primary">
+            <Button
+              isLoading={loading}
+              onClick={() => onSave()}
+              color="primary"
+            >
               Save Configuration
             </Button>
           </div>

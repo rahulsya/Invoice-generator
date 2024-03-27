@@ -1,29 +1,20 @@
 "use client";
 import React from "react";
-import { Details, Item } from "@/@types/types";
+import { Details, Item, Settings } from "@/@types/types";
 import { formatNumber } from "@/utils";
 import Image from "next/image";
 import { invDetail } from "@/utils/detailInvoice";
-import useSettings from "@/hooks/useSettings";
 
 type IProps = {
   Items: Item[];
   totalPrice: () => number;
   Details: Details;
+  settings: Settings;
 };
 
-function Preview({ Items, Details, totalPrice }: IProps) {
-  const {
-    bill_from,
-    bill_to,
-    invoice_number,
-    notes,
-    discount,
-    due_date,
-    date,
-  } = Details;
+function Preview({ Items, Details, totalPrice, settings }: IProps) {
+  const { bill_to, invoice_number, date } = Details;
 
-  const { settings } = useSettings();
   const formatTotal = formatNumber(totalPrice());
   const formatFinalTotal = formatNumber(totalPrice() - Details.discount);
   return (
@@ -40,7 +31,7 @@ function Preview({ Items, Details, totalPrice }: IProps) {
           alt="Flyover logo"
           width={150}
           height={150}
-          src={"/logoFlyover.png"}
+          src={settings.logo_url}
           priority
         />
       </div>
@@ -68,7 +59,6 @@ function Preview({ Items, Details, totalPrice }: IProps) {
           <tr className="text-gray-600">
             <th className="px-2 py-4 text-start md:px-4">Nama Produk</th>
             <th className="px-2 py-4 text-start md:px-4">Harga</th>
-            {/* <th className="text-start px-2 md:px-4 py-4">Qty Roll</th> */}
             <th className="px-2 py-4 text-start md:px-4">Qty</th>
             <th className="px-2 py-4 text-start md:px-4">Total</th>
           </tr>
@@ -80,11 +70,6 @@ function Preview({ Items, Details, totalPrice }: IProps) {
               <td className="break-words px-2 py-3 md:px-4">
                 {formatNumber(item.price)}
               </td>
-              {/* <td className="px-4 py-3">{item.qtyRoll} / ROll </td> */}
-              {/* <td className="break-words px-2 py-3 md:px-4">
-                {item.qty != 0 && `${item.qty} Meter`}
-                {item.qtyRoll != 0 && `${item.qtyRoll} Roll`}
-              </td> */}
               <td className="break-words px-2 py-3 md:px-4">
                 {`${item.qty} ${item.unitType}`}
               </td>
@@ -103,12 +88,10 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="my-4 flex flex-row items-center justify-end text-xs md:text-sm">
         <div className="mr-12 space-y-2 font-semibold text-gray-500">
           <div>Sub Total</div>
-          {/* <div>Discount</div> */}
           <div>Total</div>
         </div>
         <div className="space-y-2 text-end font-bold">
           <div>{formatTotal}</div>
-          {/* <div>{discount ? `- ${formatNumber(discount)}` : "-"}</div> */}
           <div>{formatTotal}</div>
         </div>
       </div>
@@ -121,11 +104,11 @@ function Preview({ Items, Details, totalPrice }: IProps) {
       <div className="py-2 text-sm font-semibold">
         <div>
           <span className="font-normal">Bank : </span>
-          {invDetail.bankAccountName}
+          {settings.bank_name}
         </div>
         <div>
           <span className="font-normal">Nomor rekening : </span>
-          {invDetail.bankAccountNumber}
+          {settings.bank_account_number}
         </div>
       </div>
       {/* end notes */}

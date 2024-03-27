@@ -1,4 +1,6 @@
+import { Settings } from "@/@types/types";
 import PdfDocument from "@/app/pdf/document";
+import { getSettings } from "@/firebase/settings";
 import { getInvoiceDetail } from "@/firebase/store";
 import { renderToStream } from "@joshuajaco/react-pdf-renderer-bundled";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -6,10 +8,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 export const dynamic = "force-dynamic";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-  const logoURL = `https://${req.headers["x-forwarded-host"]}/logoFlyover.png`;
   const inv_number = req.query.inv_number || `inv-`;
   if (req.query.inv_number) {
     const detailInvoice = await getInvoiceDetail(`${req.query.inv_number}`);
+    const settings = (await getSettings()) as Settings;
     if (detailInvoice) {
       const { items, ...detail } = detailInvoice;
       const buffer = await renderToStream(
@@ -17,7 +19,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           data={items}
           detail={detail}
           summaryTotal={req.query?.summary_total?.toString() || ""}
-          logoUrl={logoURL}
+          logoUrl={settings?.logo_url}
+          settings={settings}
         />
       );
 

@@ -27,3 +27,12 @@ export interface ItemInvoice {
   qty: number;
   qtyRoll: number;
 }
+
+export interface Setting {
+  application_name: string;
+  address: string;
+  bank_name: string;
+  bank_account_number: string;
+  phone_number: string;
+  logo_url?: string;
+}
