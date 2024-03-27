@@ -3,10 +3,8 @@ import Input from "@/components/Input";
 import React from "react";
 import InvoiceItem from "./invoice-items";
 import { formatNumber } from "@/utils";
-import { Details, Item } from "@/@types/types";
-// import { invDetail } from "@/utils/detailInvoice";
+import { Details, Item, Settings } from "@/@types/types";
 import useDimensions from "@/hooks/useDimension";
-import useSettings from "@/hooks/useSettings";
 
 type IProps = {
   Items: Item[];
@@ -17,6 +15,8 @@ type IProps = {
   // details
   Details: Details;
   setDetails: React.Dispatch<React.SetStateAction<Details>>;
+  // setting
+  settings: Settings;
 };
 
 function Form({
@@ -27,9 +27,9 @@ function Form({
   addNewItem,
   Details,
   setDetails,
+  settings,
 }: IProps) {
-  const { settings } = useSettings();
-  const { height, width } = useDimensions();
+  const { width } = useDimensions();
   const formatTotal = formatNumber(totalPrice());
 
   const onChangeDetails = (

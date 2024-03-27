@@ -10,8 +10,7 @@ import {
   Image,
 } from "@joshuajaco/react-pdf-renderer-bundled";
 import { formatNumber } from "@/utils";
-import { Details, Item } from "@/@types/types";
-import { invDetail } from "@/utils/detailInvoice";
+import { Details, Item, Settings } from "@/@types/types";
 
 Font.register({
   family: "Oswald",
@@ -162,11 +161,13 @@ function PdfDocument({
   detail,
   summaryTotal,
   logoUrl,
+  settings,
 }: {
   data: Item[];
   detail: Details | any;
   summaryTotal: string;
   logoUrl: string;
+  settings: Settings;
 }) {
   const Items: Item[] = data;
   const Detail: Details = detail;
@@ -186,11 +187,9 @@ function PdfDocument({
         </View>
         <View style={styles.addressWrapper}>
           <View style={styles.addressFrom}>
-            <Text style={styles.titleAddress}>{invDetail.storeName}</Text>
-            <Text style={styles.addressDesc}>{invDetail.storeAddress}</Text>
-            <Text style={styles.addressDesc}>
-              {invDetail.phoneNumber} - {invDetail.phoneNumber2}
-            </Text>
+            <Text style={styles.titleAddress}>{settings.application_name}</Text>
+            <Text style={styles.addressDesc}>{settings.address}</Text>
+            <Text style={styles.addressDesc}>{settings.phone_number}</Text>
           </View>
           <View style={styles.addressTo}>
             <Text>Pelanggan : </Text>
@@ -228,10 +227,10 @@ function PdfDocument({
         </View>
         <Text style={{ fontSize: 10, top: 70 }}>*Infromasi Pembayaran </Text>
         <Text style={{ fontSize: 10, maxWidth: 250, top: 75 }}>
-          Bank : {invDetail.bankAccountName}
+          Bank : {settings.bank_name}
         </Text>
         <Text style={{ fontSize: 10, maxWidth: 250, top: 75 }}>
-          Nomor rekening : {invDetail.bankAccountNumber}
+          Nomor rekening : {settings.bank_account_number}
         </Text>
         <View style={styles.invoiceDetails}>
           <View style={styles.invoiceDetailsDate}>

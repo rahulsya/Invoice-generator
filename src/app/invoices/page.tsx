@@ -7,24 +7,20 @@ import useDetail from "@/hooks/useDetail";
 import Button from "@/components/button";
 import { getInvoiceDetail, saveInvoice } from "@/firebase/store";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { generateInvoice } from "@/utils";
 import { FormatDate } from "@/utils/date";
+import { getSettings } from "@/firebase/settings";
+import { Settings } from "@/@types/types";
+import useSettings from "@/hooks/useSettings";
 
 function FlyoverInvoice() {
-  const pathname = usePathname();
   const params = useSearchParams();
   const router = useRouter();
-  const {
-    Items,
-    setItems,
-    addNewItem,
-    removeItem,
-    totalPrice,
-    saveItems,
-    resetItems,
-  } = useItem();
-  const { Details, setDetails, saveDetails, resetDetails } = useDetail();
+  const { Items, setItems, addNewItem, removeItem, totalPrice, resetItems } =
+    useItem();
+  const { Details, setDetails, resetDetails } = useDetail();
+  const { settings, setSettings } = useSettings();
 
   const [toggleForm, setToggleForm] = useState(true);
   const [save, SetSave] = useState(false);
@@ -46,7 +42,7 @@ function FlyoverInvoice() {
   };
 
   useEffect(() => {
-    const { bill_to, date } = Details;
+    const { bill_to } = Details;
     const isEmptyField = [bill_to].includes("");
     if (Items.length > 0 && !isEmptyField) {
       SetSave(true);
@@ -73,6 +69,13 @@ function FlyoverInvoice() {
       setDetails({ ...Details, invoice_number: generateInvoice() });
     }
   }, [params]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getSettings();
+      if (data) setSettings(data as Settings);
+    })();
+  }, []);
 
   return (
     <div>
@@ -130,6 +133,7 @@ function FlyoverInvoice() {
             setItems={setItems}
             setDetails={setDetails}
             Details={Details}
+            settings={settings}
           />
         </div>
         {!toggleForm && (
@@ -137,7 +141,12 @@ function FlyoverInvoice() {
             className={`mb-4 ml-0 mt-4 min-h-screen w-full rounded-xl border
             bg-white p-2 shadow-md lg:ml-4 lg:mt-0 lg:w-1/2 lg:p-12`}
           >
-            <Preview totalPrice={totalPrice} Items={Items} Details={Details} />
+            <Preview
+              totalPrice={totalPrice}
+              Items={Items}
+              Details={Details}
+              settings={settings}
+            />
           </div>
         )}
       </div>
