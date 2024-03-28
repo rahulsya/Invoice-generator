@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Image } from "@nextui-org/image";
+import Image from "next/image";
 import { Input, Textarea } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import useSettings from "@/hooks/useSettings";
@@ -41,6 +41,18 @@ function Setting() {
     setLoading(false);
   };
 
+  const imageLoader = ({
+    src,
+    width,
+    quality,
+  }: {
+    src: string;
+    width?: number;
+    quality?: number;
+  }) => {
+    return src;
+  };
+
   return (
     <div className="flex flex-col gap-2 px-3">
       <div>
@@ -65,7 +77,19 @@ function Setting() {
 
           <div className="flex flex-col gap-2">
             <div className="text-sm font-bold">Invoice Logo</div>
-            <Image width={100} alt="invoice_logo" src={settings.logo_url} />
+            {/* <Image
+              src={settings.logo_url}
+              alt="Invoice Logo"
+              width={100}
+              height={100}
+              loader={imageLoader}
+            /> */}
+            <img
+              src={settings.logo_url}
+              alt="Invoice Logo"
+              width={100}
+              height={100}
+            />
             <Input
               type="file"
               onChange={(e) => {
