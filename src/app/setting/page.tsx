@@ -77,12 +77,18 @@ function Setting() {
 
           <div className="flex flex-col gap-2">
             <div className="text-sm font-bold">Invoice Logo</div>
-            <Image
+            {/* <Image
               src={settings.logo_url}
               alt="Invoice Logo"
               width={100}
               height={100}
               loader={imageLoader}
+            /> */}
+            <img
+              src={settings.logo_url}
+              alt="Invoice Logo"
+              width={100}
+              height={100}
             />
             <Input
               type="file"
