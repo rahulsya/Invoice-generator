@@ -41,6 +41,18 @@ function Setting() {
     setLoading(false);
   };
 
+  const imageLoader = ({
+    src,
+    width,
+    quality,
+  }: {
+    src: string;
+    width?: number;
+    quality?: number;
+  }) => {
+    return src;
+  };
+
   return (
     <div className="flex flex-col gap-2 px-3">
       <div>
@@ -66,10 +78,11 @@ function Setting() {
           <div className="flex flex-col gap-2">
             <div className="text-sm font-bold">Invoice Logo</div>
             <Image
+              src={settings.logo_url}
+              alt="Invoice Logo"
               width={100}
               height={100}
-              alt="invoice_logo"
-              src={settings.logo_url}
+              loader={imageLoader}
             />
             <Input
               type="file"
