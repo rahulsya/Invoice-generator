@@ -2,16 +2,8 @@
 const nextConfig = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
-    output: "standalone",
-    // remotePatterns: [
-    //   {
-    //     protocol: "https",
-    //     hostname: "firebasestorage.googleapis.com",
-    //     port: "",
-    //     pathname: "/v0/b/flyoversticker-e4fea.appspot.com/o/**",
-    //   },
-    // ],
   },
+  output: "standalone",
   async redirects() {
     return [
       {

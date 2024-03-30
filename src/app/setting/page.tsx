@@ -25,6 +25,7 @@ function Setting() {
   const getDataSetting = async () => {
     const data = await getSettings();
     if (data) {
+      console.log(data);
       setSettings(data as Settings);
     }
   };
