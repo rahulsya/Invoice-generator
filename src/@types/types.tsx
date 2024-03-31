@@ -36,3 +36,12 @@ export interface Settings {
   file_name: string;
   phone_number: string;
 }
+
+// dashboard
+export interface LastInvoiceItem {
+  key: number;
+  invoice_number: string;
+  name: string;
+  date: string;
+  total: string;
+}

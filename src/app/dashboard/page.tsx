@@ -1,106 +1,139 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import CardSummary from "./card-summary";
-import { getTotalData, getTotalDataSummaryByDate } from "@/firebase/store";
-import { FormatDate } from "@/utils/date";
+import useDashboard from "@/hooks/useDasboard";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
+  Button,
+} from "@nextui-org/react";
+import { LastInvoiceItem } from "@/@types/types";
 
 function Dashboard() {
   const router = useRouter();
-  const [Summary, setSummary] = useState<{
-    [field: string]: {
-      title: string;
-      desc: string;
-      content: string;
-    };
-  }>({
-    totalAllInvoice: {
-      title: "Total Invoices",
-      desc: "Total All created invoices",
-      content: "",
-    },
-    invoiceToday: {
-      title: "Invoice today",
-      desc: "",
-      content: "",
-    },
-    invoiceYesterday: {
-      title: "Invoice Yesterday",
-      desc: "",
-      content: "",
-    },
-  });
-
-  useEffect(() => {
-    TotalAlldata();
-    getTotalDataToday();
-    getTotalDataYesterday();
-  }, []);
-
-  const TotalAlldata = async () => {
-    const data = await getTotalData();
-    setSummary((oldState) => ({
-      ...oldState,
-      totalAllInvoice: {
-        title: "Total Invoices",
-        desc: `Total All created invoices`,
-        content: data ? `${data.total}` : "0",
-      },
-    }));
-  };
-
-  const getTotalDataToday = async () => {
-    const date = new Date();
-    const data = await getTotalDataSummaryByDate(date);
-    setSummary((oldState) => ({
-      ...oldState,
-      invoiceToday: {
-        title: "Invoice today",
-        desc: `${FormatDate(date)}`,
-        content: data ? `${data.data.length}` : "0",
-      },
-    }));
-  };
-
-  const getTotalDataYesterday = async () => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    const data = await getTotalDataSummaryByDate(yesterday);
-
-    setSummary((oldState) => ({
-      ...oldState,
-      invoiceYesterday: {
-        title: "Invoice Yesterday",
-        desc: `${FormatDate(yesterday)}`,
-        content: data ? `${data.data.length}` : "0",
-      },
-    }));
-  };
+  const { summary, setSummary, lastInvoices } = useDashboard();
 
   const redirectToInvoices = () => {
     router.push("/document");
   };
 
+  const rows = lastInvoices;
+
+  const columns = [
+    {
+      key: "invoice_number",
+      label: "Invoice Number",
+    },
+    {
+      key: "date",
+      label: "Date",
+    },
+    {
+      key: "total",
+      label: "Total",
+    },
+    {
+      key: "action",
+      label: "Action",
+    },
+  ];
+
+  const renderCell = React.useCallback(
+    (item: LastInvoiceItem, columnKey: React.Key) => {
+      const cellValue = item[columnKey as keyof LastInvoiceItem];
+
+      switch (columnKey) {
+        case "invoice_number":
+          return (
+            <div className="max-w-32 flex flex-col">
+              <div className="font-bold">{cellValue}</div>
+              <div className="text-xs font-light text-gray-400">
+                {item.name.substring(0, 50)} {item.name.length >= 50 && "..."}
+              </div>
+            </div>
+          );
+        case "date":
+          return <div>{cellValue}</div>;
+        case "total":
+          return <div className="font-semibold text-blue-500">{cellValue}</div>;
+        case "action":
+          return (
+            <div>
+              <Button
+                onClick={() => {
+                  router.push(`/invoices?inv=${item.invoice_number}`);
+                }}
+                color="primary"
+              >
+                View
+              </Button>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
+
   return (
     <div className="flex flex-col gap-2 px-3">
       <div className="text-lg font-semibold">Dashboard.</div>
       <div className="flex flex-col gap-2">
-        <div className="pt-4 text-lg text-sm">Summary</div>
+        <div className="pt-4 text-xl">Summary</div>
         <div className="flex flex-col gap-2 lg:flex-row">
           <CardSummary
             onClick={() => redirectToInvoices()}
-            data={Summary["totalAllInvoice"]}
+            data={summary["totalAllInvoice"]}
           ></CardSummary>
           <CardSummary
             onClick={() => redirectToInvoices()}
-            data={Summary["invoiceToday"]}
+            data={summary["invoiceToday"]}
             cardType="bordered-bg"
           ></CardSummary>
           <CardSummary
             onClick={() => redirectToInvoices()}
-            data={Summary["invoiceYesterday"]}
+            data={summary["invoiceYesterday"]}
           ></CardSummary>
+        </div>
+        <div className="mt-8 flex w-full flex-col  gap-2 md:w-full lg:w-1/2 ">
+          <div className="flex flex-row items-center justify-between text-sm">
+            <div className="text-xl">Last Created Invoices</div>
+            <div>
+              <Button onClick={() => redirectToInvoices()} color="primary">
+                View All
+              </Button>
+            </div>
+          </div>
+          <div className="mt-2">
+            <Table
+              color="primary"
+              isStriped
+              removeWrapper
+              aria-label="Last created Inovices"
+            >
+              <TableHeader columns={columns}>
+                {(column) => (
+                  <TableColumn key={column.key}>{column.label}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={rows}>
+                {(item) => (
+                  <TableRow key={item.key}>
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </div>
