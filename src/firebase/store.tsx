@@ -122,3 +122,22 @@ export const getTotalData = async () => {
     console.log(error);
   }
 };
+
+//get last 5 data invoices
+export const getLastData = async () => {
+  try {
+    const invoicesRef = collection(
+      db,
+      "invoices"
+    ) as CollectionReference<Invoice>;
+    const q = query(invoicesRef, orderBy("timestamp", "desc"), limit(5));
+    const querySnapshot = await getDocs(q);
+    let data: Invoice[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return { data };
+  } catch (error) {
+    console.log(error);
+  }
+};
