@@ -111,7 +111,7 @@ function SideNavigation() {
 
         {/* menus */}
         {isShowMenu && (
-          <div className="absolute z-[100] mt-[70px] flex min-h-screen w-full flex-col border-b bg-white shadow lg:hidden">
+          <div className="animate-fade-in full-h-mobilenav absolute z-[100] mt-[70px] flex w-full flex-col border-b bg-white shadow lg:hidden">
             <Menu />
             <Button className="m-2" title="Logout" onClick={onLogout} />
           </div>

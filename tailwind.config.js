@@ -15,6 +15,17 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      keyframes: {
+        fadein: {
+          "0%": { opacity: "0" },
+          "25%": { opacity: "0.3" },
+          "50%": { opacity: "0.5" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "fade-in": "fadein 0.3s",
+      },
     },
   },
   plugins: [nextui()],
