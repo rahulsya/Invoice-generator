@@ -45,3 +45,10 @@ export interface LastInvoiceItem {
   date: string;
   total: string;
 }
+
+export interface newItem {
+  name: string;
+  price: number;
+  qty: number;
+  unitType: string;
+}

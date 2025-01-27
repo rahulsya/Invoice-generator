@@ -1,17 +1,20 @@
 "use client";
-import Input from "@/components/Input";
-import React from "react";
+// import Input from "@/components/Input";
+import React, { useState } from "react";
 import InvoiceItem from "./invoice-items";
 import { formatNumber } from "@/utils";
-import { Details, Item, Settings } from "@/@types/types";
+import { Details, Item, newItem, Settings } from "@/@types/types";
 import useDimensions from "@/hooks/useDimension";
+import AddItem from "./add-Item";
+import EditItem from "./edit-item";
+import { Input, useDisclosure } from "@nextui-org/react";
 
 type IProps = {
   Items: Item[];
   totalPrice: () => number;
   setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   removeItem: (id: number) => void;
-  addNewItem: () => void;
+  addNewItem: (item: newItem) => void;
   // details
   Details: Details;
   setDetails: React.Dispatch<React.SetStateAction<Details>>;
@@ -38,11 +41,33 @@ function Form({
     setDetails({ ...Details, [event.target.name]: event.target.value });
   };
 
+  function onAddItem(item: newItem) {
+    addNewItem(item);
+  }
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<Item>();
+
+  function onUpdateItem(item: newItem) {
+    setItems((state) => {
+      const findItem = state.find((i) => i.id == selectedItem?.id);
+      if (findItem) {
+        const index = state.indexOf(findItem);
+        state[index] = {
+          ...state[index],
+          ...item,
+        };
+      }
+      return state;
+    });
+    onClose();
+  }
+
   return (
     <div className="w-full text-sm">
       <div className="flex flex-row">
         <Input
-          disable={true}
+          isDisabled
           onChange={(e) => onChangeDetails(e)}
           value={Details?.invoice_number}
           placeholder="#0001"
@@ -80,29 +105,42 @@ function Form({
       </div>
 
       {/* items */}
-      <div className="mt-8 rounded bg-gray-100 p-4">
+      <div className="mt-8">
         {/* form grup */}
+        {Items.length == 0 && (
+          <div className="justify-centerp-4 flex items-center  text-center">
+            Item Belum Ditambahkan
+          </div>
+        )}
         {Items.map((item, index) => {
-          const currentWidth = width;
-          const showHeader =
-            currentWidth < 1024 ? true : index == 0 ? true : false;
           return (
             <InvoiceItem
               key={item.id}
               item={item}
-              showHeader={showHeader}
-              onChangeItem={setItems}
               onRemoveItem={() => removeItem(item.id)}
+              onEditItem={() => {
+                setSelectedItem({
+                  id: item.id,
+                  name: item.name,
+                  price: item.price,
+                  qty: item.qty,
+                  unitType: item.unitType,
+                  qtyRoll: 0,
+                });
+                onOpen();
+              }}
             />
           );
         })}
+        <EditItem
+          intialData={selectedItem}
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpenChange={onOpenChange}
+          onEditItem={onUpdateItem}
+        />
         <div className="my-4 flex w-full justify-center">
-          <button
-            onClick={() => addNewItem()}
-            className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
-          >
-            Add Item
-          </button>
+          <AddItem onAddItem={onAddItem} />
         </div>
       </div>
       {/* end items */}

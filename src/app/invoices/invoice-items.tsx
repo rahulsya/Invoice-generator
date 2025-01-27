@@ -1,34 +1,15 @@
-import { Item } from "@/@types/types";
-import Input from "@/components/Input";
+import { Item, newItem } from "@/@types/types";
+import { formatNumber } from "@/utils";
+import { Button } from "@nextui-org/react";
 import React from "react";
 
 type IProps = {
   item?: Item;
-  showHeader?: boolean;
-  onChangeItem: React.Dispatch<React.SetStateAction<Item[]>>;
   onRemoveItem: () => void;
+  onEditItem: () => void;
 };
 
-function InvoiceItem({
-  item,
-  showHeader = true,
-  onChangeItem,
-  onRemoveItem,
-}: IProps) {
-  const setItem = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    onChangeItem((state) => {
-      return state.map((product) => ({
-        ...product,
-        [event.target.name]:
-          product.id === item?.id
-            ? event.target.value
-            : product[event.target.name as keyof Item],
-      }));
-    });
-  };
-
+function InvoiceItem({ item, onRemoveItem, onEditItem }: IProps) {
   const totalPrice =
     item?.price && (item?.qty || item.qtyRoll)
       ? item.price * (item.qty != 0 ? item.qty : item.qtyRoll)
@@ -36,68 +17,26 @@ function InvoiceItem({
 
   return (
     <div>
-      <div className="mb-4 flex w-full flex-col items-center text-sm lg:flex-row">
-        <div className="w-full lg:mr-3 lg:w-[400px]">
-          <Input
-            name="name"
-            placeholder="Product name"
-            onChange={(e) => {
-              setItem(e);
-            }}
-            title={showHeader ? "Nama Produk" : ""}
-            type="text"
-            value={item?.name}
-          />
+      <div className="flex items-center justify-between gap-3 border-b border-b-gray-300 bg-gray-100 p-4">
+        <div className="flex flex-col">
+          <div className="text-md font-bold">{item?.name}</div>
+          <div className="text-sm text-gray-500">
+            {item?.qty} {item?.unitType} X {formatNumber(item?.price || 0)}
+          </div>
         </div>
-        <div className="w-full lg:mr-3 lg:w-[200px]">
-          <Input
-            name="price"
-            placeholder="Price"
-            onChange={(e) => setItem(e)}
-            title={showHeader ? "Harga" : ""}
-            type="number"
-            value={item?.price.toString()}
-          />
+        <div className="flex flex-col items-center gap-2 lg:flex-row">
+          <div className="text-md font-bold">
+            {formatNumber(totalPrice || 0)}
+          </div>
+          <div className="flex gap-1">
+            <Button size="sm" color="primary" onClick={() => onEditItem()}>
+              Edit
+            </Button>
+            <Button size="sm" color="danger" onClick={() => onRemoveItem()}>
+              Hapus
+            </Button>
+          </div>
         </div>
-        <div className="w-full lg:mr-3 lg:w-[100px]">
-          <Input
-            name="qty"
-            placeholder="Qty"
-            onChange={(e) => setItem(e)}
-            title={showHeader ? "Qty" : ""}
-            type="number"
-            value={item?.qty.toString()}
-          />
-        </div>
-        <div className="w-full lg:mr-3 lg:w-[100px]">
-          {showHeader && (
-            <div className={`pb-1 text-xs text-gray-500`}>Satuan</div>
-          )}
-          <select
-            className="w-full rounded-md border border-gray-400 p-2"
-            value={item?.unitType}
-            name="unitType"
-            onChange={(e: any) => setItem(e)}
-          >
-            <option value="Roll">Roll</option>
-            <option value="Meter">Meter</option>
-            <option value="Pcs">Pcs</option>
-          </select>
-        </div>
-        <div className="w-full lg:mr-3 lg:w-[200px]">
-          <Input
-            name="qty"
-            placeholder="Qty"
-            onChange={(e) => setItem(e)}
-            title={showHeader ? "Total" : ""}
-            type="number"
-            value={totalPrice.toString()}
-            disable={true}
-          />
-        </div>
-        <button onClick={() => onRemoveItem()} className="pl-2">
-          ✖
-        </button>
       </div>
     </div>
   );
